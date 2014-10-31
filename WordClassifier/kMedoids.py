@@ -8,18 +8,29 @@ Created on Oct 27, 2014
 import numpy as np
 import random
 from nltk.corpus import wordnet as wn
+import math
 
-
-def distanceMetric(mem1, mem2):
-    print "Distance Metric Call"
-    
+def distanceMetric(word1, word2):
+    #print "Distance Metric Call for (%r, %r)" % (word1, word2)
+    #print "Using Path Similarity"
     # Needs the same part of speech to compare path similarity
-    syns1 = wn.synsets(mem1, pos=wn.ADJ)
-    syns2 = wn.synsets(mem2, pos=wn.ADJ)
-    print "Word = %r. Synsets = %r" %(mem1, syns1)
-    print "Word = %r. Synsets = %r" %(mem2, syns2)
+    syns1 = wn.synsets(word1)
+    syns2 = wn.synsets(word2)
+    list_sim = [0]
+    for syn1 in syns1:
+        for syn2 in syns2:
+            #if syn1.pos() == syn2.pos():
+            #print "Word = %r. Synset = %r" %(word1, syn1)
+            #print "Word = %r. Synset = %r" %(word2, syn2)
+            _sim = wn.path_similarity(syn1, syn2)
+            if not _sim  == None:
+                #print "Path Similarity for (%r, %r) is %f" % (syn1, syn2, _sim)
+                list_sim.append(_sim)
+    #print list_sim
+    #print "The Average Similarity is %f" % np.mean(list_sim)
+    #print "The Maximum Similarity is %f" % np.max(list_sim)
     
-    return 1 - wn.path_similarity(syns1[0], syns2[0])
+    return math.sqrt(1-np.max(list_sim))
 
 
 def kMedoids(K, X, distance):
@@ -29,19 +40,18 @@ def kMedoids(K, X, distance):
     # - This is equivalent to assigning random members to be medoids
     mu = random.sample(xrange(m), K)
     
-    
     # 2. initiate cluster_idx which indicates which cluster each observation belongs to
     cluster_idx = np.empty(m, int)
     
     # clusterSize : size of each cluster
     clusterSize = np.empty(K, int)
-    epsilon = 0.001 # 0.1 percent
+    epsilon = 0.1 # 0.1 percent
     
     numIterations = 50
     distortions = np.zeros((numIterations))
     
     # new
-    
+    assignmentDictionary = {}    
     
     for it in range(numIterations):
         # 1. assign each observation to a cluster based on distance
@@ -60,7 +70,7 @@ def kMedoids(K, X, distance):
             _clusterNumber = np.argmin(distance_list)
             cluster_idx[ob] = _clusterNumber
             assignmentDictionary[_clusterNumber].append(ob)
-            cost += _clusterNumber
+            cost += distance_list[_clusterNumber]
         
         distortions[it] = cost
         #listIndex = it
@@ -90,15 +100,21 @@ def kMedoids(K, X, distance):
                     minSum = _sum
                     minIndex = index
             mu[cluster] = minIndex
-    
+        
+        print "Iteration %d"  % it
+        print assignmentDictionary
         
     # make sure the distortion function decreases for every iteration
-    print(distortions)
+    print distortions
+    
+    print "Done with K Medoid"
+    
 
 
 
 def main():
-    kMedoids(2, ['simple','elegant','super','chic','fashion','upset','moody','feeling'], distanceMetric)
+    #kMedoids(2, ['simple','elegant','super','chic','fashion','upset','moody','feeling'], distanceMetric)
+    kMedoids(3, ['eat','walk','drink','travel','roam','sleep','cook','shower','mad'], distanceMetric)
     
 if __name__ == "__main__":
     main()
