@@ -2,3 +2,4 @@ Data/
 .DS_Store
 *.pyc
 *.p
+WordClassifier/cifar-10-batches-py/
