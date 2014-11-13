@@ -1,0 +1,9 @@
+The following packages are required to run the code
+
+1. C enchant
+Install: brew install enchant
+2. Python Enchant
+Install: pip install pyenchant
+3. Python NLTK
+Install: pip install nltk
+4. 
