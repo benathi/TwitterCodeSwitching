@@ -50,15 +50,12 @@ print 'The number of Points = %d'% m
 
 
 # The number of clusters is specified by the first argument
-<<<<<<< HEAD
-K = int(sys.argv[1]);
-=======
 #K = int(sys.argv[1]);
 ############ Put the parameter here
 K = 10
 
 
->>>>>>> FETCH_HEAD
+
 
 print("Starting");
 
@@ -78,13 +75,7 @@ epsilon = 0.001 # 0.1 percent
 
 numIterations = 50
 distortions = np.zeros((numIterations))
-
-# new
-<<<<<<< HEAD
-
-=======
 assignmentDictionary = {}
->>>>>>> FETCH_HEAD
 
 for it in range(numIterations):
 	# 1. assign each observation to a cluster based on distance
@@ -103,11 +94,8 @@ for it in range(numIterations):
 		_clusterNumber = np.argmin(distance_list)
 		cluster_idx[ob] = _clusterNumber
 		assignmentDictionary[_clusterNumber].append(ob)
-<<<<<<< HEAD
-		cost += _clusterNumber
-=======
+
 		cost += distance_list[_clusterNumber]
->>>>>>> FETCH_HEAD
 	
 	distortions[it] = cost
 	#listIndex = it
