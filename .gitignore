@@ -6,3 +6,4 @@ WordClassifier/cifar-10-batches-py/*
 *.txt
 ark-tweet-nlp*
 stanford-ner*
+*.png
