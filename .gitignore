@@ -2,8 +2,7 @@ Data/
 .DS_Store
 *.pyc
 *.p
-<<<<<<< HEAD
 WordClassifier/cifar-10-batches-py/*
-=======
-WordClassifier/cifar-10-batches-py/
->>>>>>> FETCH_HEAD
+*.txt
+ark-tweet-nlp*
+stanford-ner*

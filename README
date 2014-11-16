@@ -7,3 +7,7 @@ Install: pip install pyenchant
 3. Python NLTK
 Install: pip install nltk
 4. 
+
+5. Language Identification : Recommended by Code Switching Community
+https://github.com/saffsd/langid.py
+Install: pip install --pre langid
