@@ -192,9 +192,39 @@ def histogramPOS():
         freq[i] /= _sum*1.0
     
     df = pd.DataFrame({'POS':dict_pos.keys(), 'Density':freq})
-    p = ggplot(aes(x='POS',y='Density'), data=df)+ geom_bar(stat='identity', fill='#FF9999')
+    p = (ggplot(aes(x='POS',y='Density'), data=df) +
+     geom_bar(stat='identity', fill='#FF9999') +
+      labs(title='Histogram of Part of Speech of Words in Code-Switching Phrases') )
     print p
 
+def histogramPOS_LoneCS():
+    # do a part of speech histogram
+    listPhrases = pickle.load(open('../preprocessedData/list_cs_phrases_w_tags.p', 'rb'))
+    dict_pos = {}
+    totalNum = 0
+    numLoneCS = 0
+    for phrase in listPhrases:
+        totalNum += 1
+        if len(phrase[3]) == 1:
+            numLoneCS += 1
+            tag = phrase[3][0]
+            if not tag in dict_pos:
+                dict_pos[tag] = 1
+            else:
+                dict_pos[tag] += 1
+    freq = [dict_pos[key] for key in dict_pos]
+    _sum = sum(freq)
+    for i in range(len(freq)):
+        freq[i] /= _sum*1.0
+    
+    print 'The number of CS phrases = %d' % totalNum
+    print 'The number of CS phrases of length 1 = %d' % numLoneCS
+    
+    df = pd.DataFrame({'POS':dict_pos.keys(), 'Density':freq})
+    p = ( ggplot(aes(x='POS',y='Density'), data=df) +
+           geom_bar(stat='identity', fill='#FF9999') +
+           labs(title='Histogram of Part of Speech of Code-Switching Lone Words') )
+    print p
 
 
 def buildNERtagger():
@@ -256,16 +286,88 @@ def histogramStanfordNER():
     print p
     
 
+def AnalyzeCSPhrases():
+    listPhrases = pickle.load(open('../preprocessedData/list_cs_phrases_w_tags.p', 'rb'))
+    #for p in listPhrases: print p
+    # make a dictionary of list of phrases?
+    dict_cs = {}
+    for tup in listPhrases:
+        phrase = tup[0]
+        freq = tup[1]
+        dict_cs[phrase] = {'freq':freq, 'tweet_tokens':tup[2], 'tweet_tags':tup[3]}
+    
+    list_single_cs_verb = []
+    list_single_cs_noun = []
+    list_single_cs_adj = []
+    list_single_cs_prep = []
+    list_single_cs_inter = []
+    list_single_cs_proper = []
+    
+#     dict_pos_freq_single = {}
+#     total_numDistinct = len(dict_cs.keys())
+#     total_numDictinct_lone = 0
+    for key in dict_cs:
+        if len(dict_cs[key]['tweet_tokens']) == 1:
+            pos = dict_cs[key]['tweet_tags'][0]
+#             total_numDictinct_lone += 1
+#             ## For histogram
+#             if pos in dict_pos_freq_single:
+#                 dict_pos_freq_single[pos] += 1
+#             else:
+#                 dict_pos_freq_single[pos] = 1
+            
+            if pos == 'V':
+                list_single_cs_verb.append(dict_cs[key])
+            elif pos ==  'N':
+                list_single_cs_noun.append(dict_cs[key])
+            elif pos == 'A':
+                list_single_cs_adj.append(dict_cs[key])
+            elif pos == 'P':
+                list_single_cs_prep.append(dict_cs[key])
+            elif pos == '!':
+                list_single_cs_inter.append(dict_cs[key])
+            elif pos == '^':
+                list_single_cs_proper.append(dict_cs[key])
+#     list_keys = dict_pos_freq_single.keys()
+#     freq = [dict_pos_freq_single[key] for key in list_keys]
+#     _sum = sum(freq)
+#     for i in range(len(freq)):
+#         freq[i] /= _sum*1.0
+#     print 'The number of Distinct CS phrases = %d' % total_numDistinct
+#     print 'The number of Distinct CS phrases of length 1 = %d' % total_numDictinct_lone
+#     
+#     df = pd.DataFrame({'POS':list_keys, 'Density':freq})
+#     p = ( ggplot(aes(x='POS',y='Density'), data=df) +
+#            geom_bar(stat='identity', fill='#FF9999') +
+#            labs(title='Histogram of Part of Speech of Code-Switching Distinct Lone Words') )
+#     print p
+                
+    ##########################
+    return (list_single_cs_verb, list_single_cs_noun, list_single_cs_adj, list_single_cs_inter, list_single_cs_proper)
+    
+    #pickle.dump(dict_cs, open('../preprocessedData/dict_cs_phrases_w_tags.p','wb'))
+    #return dict_cs
+#def loadDictCSphrases():
+#    return pickle.load(open('../preprocessedData/dict_cs_phrases_w_tags.p', 'rb'))
+
+
+
+
+
 def main():
     pass
     
 if __name__ == "__main__":
     #p = histogram_CSLength()
     #(listWords, listPhrases) = listMostFrequent()
-    # Tag Tweets with CMU Tweet Tool
+    # 1. Tag Tweets with CMU Tweet Tool
     #tagTweets()
     #histogramPOS()
+    #histogramPOS_LoneCS()
     
-    ##### Use Stanford NER for Tagging too - (bug in NLTK possibly)
+    # 2. Use Stanford NER for Tagging too - (bug in NLTK possibly)
     #NER_Tweets()
     #histogramStanfordNER()
+    
+    # 3. Sanity Check
+    ob = AnalyzeCSPhrases()
