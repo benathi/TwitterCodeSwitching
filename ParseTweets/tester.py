@@ -89,7 +89,7 @@ GOT7, IGOT7僕らはみんな一つさ'''
 def testCodeSwitchingIdentification():
     thaiEng1 = '''I'm at มหาวิทยาลัยศรีนครินทรวิโรฒ (Srinakharinwirot University) in Vadhana, Bangkok w/'''
     Eng1 = 'IM SO EMOTIONAL RIGHT NOW UGHHHHH 😭'
-    from Parser import tweetToCodeSwitchingPhrases
+    from Parser import  tweetToCodeSwitchingPhrases
     tweetToCodeSwitchingPhrases(thaiEng1, verbose=True)
     
     tweetToCodeSwitchingPhrases(Eng1, verbose=True)
@@ -129,12 +129,13 @@ def testTweetTagger():
     pass
 
 def main():
+    pass
     #testPyEnchant()    # works
     #testRegExp()
     #testLanguageDetection()
     #testCodeSwitchingIdentification()
     #testListDir()
-    arkTweetTag()
+    #tagTweets()
     
 if __name__ == "__main__":
     main()

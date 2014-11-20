@@ -54,8 +54,10 @@ def breakPhrase(phrase):
         Remove username
         TODO : For proper noun, put them in another key
     '''
-def tweetToCodeSwitchingPhrases(tweetText, verbose=False):
-    # Use regular expression to extract
+def tweetToCodeSwitchingPhrases(tweetText, verbose=False, filterThaiCS=True):
+    # there's an option to filter Thai Code-Switch instance or not
+    # Input: Tweet (text)
+    # Output: List of Phrases
     
     # 1. Removing Hashtag #xxx or username @xxx or http:xxxx or https:xxx
     #tweetText = re.sub(r'[@#]\w+',r'REPLACING USERNAME/HASHTAG', tweetText) # - tested - passed
@@ -93,7 +95,8 @@ def tweetToCodeSwitchingPhrases(tweetText, verbose=False):
                     print 'Testing if Phrases after are Thai'
                     print thaiAfter
                 
-                if ((thaiBefore[0] == 'th' and thaiBefore[1] >= 0.75) or 
+                # If the option is not to filter Thai CodeSwitch : always add
+                if (not filterThaiCS) or ((thaiBefore[0] == 'th' and thaiBefore[1] >= 0.75) or 
                     (thaiAfter[0] == 'th' and thaiAfter[1] >= 0.75)):
                     new_list_words.append(w.strip())
     
@@ -116,7 +119,7 @@ def tweetToCodeSwitchingPhrases(tweetText, verbose=False):
 # This extracts a list of code-switching English phrases
 # Output: a list of dictionaries. Required field: 1. id 2. a list of code-switching instances. 
 # For example
-def extractCodeSwitchingInstances(listFileNames):
+def extractCodeSwitchingInstances(listFileNames, filterThaiCS=True, tag=''):
     listCodeSwitching = []
     numTweets = 1
     for fname in listFileNames:
@@ -137,38 +140,47 @@ def extractCodeSwitchingInstances(listFileNames):
                 continue
             _d = {}
             if tweet.has_key('id') and tweet.has_key('text'):
-                _listPhrases = tweetToCodeSwitchingPhrases(tweet['text'])
+                _listPhrases = tweetToCodeSwitchingPhrases(tweet['text'], filterThaiCS=filterThaiCS)
                 
-                _d['id'] = tweet['id']
+                # Before: save id regardless
+                # After: save id and cs only when there's a CS instance (roughl determination)
                 if not _listPhrases == []: # saves the list only if there's a code switching instance
+                    _d['id'] = tweet['id']
                     _d['cs'] = _listPhrases # cs stands for code-switching
                 listCodeSwitching.append(_d)
             else:
-                print 'This Tweet has no ID or no Text' 
-    pickle.dump(listCodeSwitching, open('../preprocessedData/list_codeSwitchPhrases.p','wb'))
+                print 'This Tweet has no ID or no Text'
+    if filterThaiCS:
+        pickle.dump(listCodeSwitching, open('../preprocessedData/list_codeSwitchPhrases.p','wb'))
+    else:
+        pickle.dump(listCodeSwitching, open('../preprocessedData/list_engPhrases_' + tag + '.p', 'wb'))
     return listCodeSwitching
 
 
-def getListDataFilenames():
-    # Use os library
-    return []
 
 def sanityCheck():
     inputFileName = '../Data/output1.txt'
     extractCodeSwitchingInstances([inputFileName])
 
-def getListTweetFiles():
-    dir = '../Data/'
+# Default folder is ThaiBatch1
+def getListTweetFiles(dir='../Data/ThaiBatch1'):
     _listFiles = os.listdir(dir)
     for i in range(len(_listFiles)):
         _listFiles[i] = os.path.join(dir, _listFiles[i])
     return _listFiles
 
+def test():
+    print breakPhrase('water melon bfdaeff new word')
+    print getListTweetFiles()
+
 def main():
+    pass
     #inputFileName = '../Data/output1.txt'
-    extractCodeSwitchingInstances(getListTweetFiles())
-    #print breakPhrase('water melon bfdaeff new word')
-    #print getListTweetFiles()
+    extractCodeSwitchingInstances(getListTweetFiles() + getListTweetFiles('../Data/ThaiBatch2'))
+    
+    
+    # English
+    #extractCodeSwitchingInstances(['../Data/EngTweets/tweets_eng_nov17.txt'], filterThaiCS=False, tag='eng_nov17')
     
 if __name__ == "__main__":
     main()

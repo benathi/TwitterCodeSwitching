@@ -19,10 +19,17 @@ from nltk.tag.stanford import NERTagger
 from mercurial.phases import listphases
 import os
 import sys
+#POS_KEYS = ['!', '$', '&', ',', 'A', 'E', 'D', 'G', 'L', 'O', 'N', 'P', 'S', 'R', 'U', 'T', 'V', 'Y', 'X', 'Z', '^', '~']
+POS_KEYS = ['!', '#', '$', '&', ',', 'A', 'E', 'D', 'G', 'L', 'O', 'N', 'P', 'S', 'R', 'U', 'T', 'V', 'Y', 'X', 'Z', '^', '~']
+# @, M
+#POS_KEYS = ['!', '#', '$', '&', ',', 'A', '@', 'E', 'D', 'G', 'M', 'L', 'O', 'N', 'P', 'S', 'R', 'U', 'T', 'V', 'Y', 'X', 'Z', '^', '~']
+
 
 def loadCodeSwitchPhrases():
     return pickle.load(open('../preprocessedData/list_codeSwitchPhrases.p','rb'))
 
+def loadEngPhrases():
+    return pickle.load(open('../preprocessedData/list_engPhrases_eng_nov17.p'))
 
 # Preprocessing
 # Filter out unwanted phrases
@@ -30,12 +37,12 @@ def csList(option='All'):
     # 1. This is the minimal version - only selecting non-empty
     cs_dict = loadCodeSwitchPhrases()
     newList_cs = []
-    numTweets = 0
+    numTweets = 0 # put the number in here
     numCSTweets = 0
     ###############
     if option=='All':
         for el in cs_dict:
-            numTweets += 1
+            #numTweets += 1
             if 'cs' in el:
                 numCSTweets += 1
                 newList_cs.append(el['cs'])
@@ -109,10 +116,12 @@ def listMostFrequent():
     for i in range(100):
         print listPhrases[i]
         
-    # Note: listWords and listPhrases are nearly identical because the number of 
+    # Note: listWords and listPhrases are nearly identical because the number of len-1 phrases dominate
+    # Format [] of tuples (key, freq)
     pickle.dump(listWords, open('../preprocessedData/list_cs_words.p','wb'))
     pickle.dump(listPhrases, open('../preprocessedData/list_cs_phrases.p','wb'))
-    # also write list of phrases into files
+    
+    # also write list of phrases into files [required as input for runTagger.sh]
     # one line for one tweet text
     #listPhrases = pickle.load(open('../preprocessedData/list_cs_phrases.p','rb'))
     f = open('../preprocessedData/list_cs_phrasesNoFreq.txt','wb')
@@ -122,7 +131,7 @@ def listMostFrequent():
     return (listWords, listPhrases)
 
 
-def tagTweets():
+def tagTweets(fname='list_cs_phrasesNoFreq.txt'):
     # works
     #exit_code = call(['bash', 'ark-tweet-nlp-0.3.2/runTagger.sh', '--output-format', 'pretsv', '--no-confidence' ,'ark-tweet-nlp-0.3.2/examples/casual.txt'])
     
@@ -131,7 +140,7 @@ def tagTweets():
                '--output-format' ,
                'pretsv',
                '--no-confidence',
-               '../preprocessedData/list_cs_phrasesNoFreq.txt'], stdin=PIPE, stdout=PIPE, stderr=PIPE)
+               '../preprocessedData/' + fname], stdin=PIPE, stdout=PIPE, stderr=PIPE)
 
     output, err = p.communicate()
     rc = p.returncode
@@ -186,15 +195,24 @@ def histogramPOS():
                 dict_pos[tag] += 1
     #print dict_pos.keys()
     #print [dict_pos[key] for key in dict_pos]
-    freq = [dict_pos[key] for key in dict_pos]
-    _sum = sum(freq)
-    for i in range(len(freq)):
-        freq[i] /= _sum*1.0
     
-    df = pd.DataFrame({'POS':dict_pos.keys(), 'Density':freq})
+    tags = POS_KEYS
+    listFreq = [None]*len(tags)
+    sumTags = 0
+    for i in range(len(tags)):
+        if tags[i] in dict_pos:
+            listFreq[i] = dict_pos[tags[i]]
+        else:
+            listFreq[i] = 0
+        sumTags += listFreq[i]
+    print 'Total number of tags(tokens) = %d' % sumTags
+    for i in range(len(tags)):
+        listFreq[i] /= sumTags*1.0
+    
+    df = pd.DataFrame({'POS':POS_KEYS, 'Density':listFreq})
     p = (ggplot(aes(x='POS',y='Density'), data=df) +
      geom_bar(stat='identity', fill='#FF9999') +
-      labs(title='Histogram of Part of Speech of Words in Code-Switching Phrases') )
+      labs(title='Distribution of Part for Speech of '+ str(sumTags) +' Words in Code-Switching Phrases') )
     print p
 
 def histogramPOS_LoneCS():
@@ -212,18 +230,27 @@ def histogramPOS_LoneCS():
                 dict_pos[tag] = 1
             else:
                 dict_pos[tag] += 1
-    freq = [dict_pos[key] for key in dict_pos]
-    _sum = sum(freq)
-    for i in range(len(freq)):
-        freq[i] /= _sum*1.0
+    
+    tags = POS_KEYS
+    listFreq = [None]*len(tags)
+    sumTags = 0
+    for i in range(len(tags)):
+        if tags[i] in dict_pos:
+            listFreq[i] = dict_pos[tags[i]]
+        else:
+            listFreq[i] = 0
+        sumTags += listFreq[i]
+    print 'Total number of tags(tokens) = %d' % sumTags
+    for i in range(len(tags)):
+        listFreq[i] /= sumTags*1.0
     
     print 'The number of CS phrases = %d' % totalNum
     print 'The number of CS phrases of length 1 = %d' % numLoneCS
     
-    df = pd.DataFrame({'POS':dict_pos.keys(), 'Density':freq})
+    df = pd.DataFrame({'POS':POS_KEYS, 'Density':listFreq})
     p = ( ggplot(aes(x='POS',y='Density'), data=df) +
            geom_bar(stat='identity', fill='#FF9999') +
-           labs(title='Histogram of Part of Speech of Code-Switching Lone Words') )
+           labs(title='Distribution of Part of Speech of ' + str(sumTags) + ' Code-Switching Lone Words') )
     print p
 
 
@@ -290,69 +317,146 @@ def AnalyzeCSPhrases():
     listPhrases = pickle.load(open('../preprocessedData/list_cs_phrases_w_tags.p', 'rb'))
     #for p in listPhrases: print p
     # make a dictionary of list of phrases?
-    dict_cs = {}
+    dict_cs_byPhrase = {}
     for tup in listPhrases:
         phrase = tup[0]
         freq = tup[1]
-        dict_cs[phrase] = {'freq':freq, 'tweet_tokens':tup[2], 'tweet_tags':tup[3]}
+        dict_cs_byPhrase[phrase] = {'freq':freq, 'tweet_tokens':tup[2], 'tweet_tags':tup[3]}
     
-    list_single_cs_verb = []
-    list_single_cs_noun = []
-    list_single_cs_adj = []
-    list_single_cs_prep = []
-    list_single_cs_inter = []
-    list_single_cs_proper = []
+
+    ### Initialization
+    dict_cs_byTags_LW = {}
+    # key: pos tag
+    # value: {V:{'eat':5, 'drink':6} , {N:{'home':10, 'house':11}} }
+    for key in POS_KEYS:
+        dict_cs_byTags_LW[key] = {}
+    ### End Initialization
     
-#     dict_pos_freq_single = {}
-#     total_numDistinct = len(dict_cs.keys())
-#     total_numDictinct_lone = 0
-    for key in dict_cs:
-        if len(dict_cs[key]['tweet_tokens']) == 1:
-            pos = dict_cs[key]['tweet_tags'][0]
-#             total_numDictinct_lone += 1
-#             ## For histogram
-#             if pos in dict_pos_freq_single:
-#                 dict_pos_freq_single[pos] += 1
-#             else:
-#                 dict_pos_freq_single[pos] = 1
+    ### Question: Should I include tokens in phrases? 
+    
+    for key in dict_cs_byPhrase:
+        if len(dict_cs_byPhrase[key]['tweet_tokens']) == 1:
+            pos = dict_cs_byPhrase[key]['tweet_tags'][0]
+            token = dict_cs_byPhrase[key]['tweet_tokens'][0]
             
-            if pos == 'V':
-                list_single_cs_verb.append(dict_cs[key])
-            elif pos ==  'N':
-                list_single_cs_noun.append(dict_cs[key])
-            elif pos == 'A':
-                list_single_cs_adj.append(dict_cs[key])
-            elif pos == 'P':
-                list_single_cs_prep.append(dict_cs[key])
-            elif pos == '!':
-                list_single_cs_inter.append(dict_cs[key])
-            elif pos == '^':
-                list_single_cs_proper.append(dict_cs[key])
-#     list_keys = dict_pos_freq_single.keys()
-#     freq = [dict_pos_freq_single[key] for key in list_keys]
-#     _sum = sum(freq)
-#     for i in range(len(freq)):
-#         freq[i] /= _sum*1.0
-#     print 'The number of Distinct CS phrases = %d' % total_numDistinct
-#     print 'The number of Distinct CS phrases of length 1 = %d' % total_numDictinct_lone
-#     
-#     df = pd.DataFrame({'POS':list_keys, 'Density':freq})
-#     p = ( ggplot(aes(x='POS',y='Density'), data=df) +
-#            geom_bar(stat='identity', fill='#FF9999') +
-#            labs(title='Histogram of Part of Speech of Code-Switching Distinct Lone Words') )
-#     print p
-                
-    ##########################
-    return (list_single_cs_verb, list_single_cs_noun, list_single_cs_adj, list_single_cs_inter, list_single_cs_proper)
+            if not pos in dict_cs_byTags_LW:
+                dict_cs_byTags_LW[pos] = {}
+            
+            if not token in dict_cs_byTags_LW[pos]:
+                dict_cs_byTags_LW[pos][token] = dict_cs_byPhrase[key]['freq']
+            else:
+                dict_cs_byTags_LW[pos][token] += dict_cs_byPhrase[key]['freq']
     
-    #pickle.dump(dict_cs, open('../preprocessedData/dict_cs_phrases_w_tags.p','wb'))
-    #return dict_cs
-#def loadDictCSphrases():
-#    return pickle.load(open('../preprocessedData/dict_cs_phrases_w_tags.p', 'rb'))
+    fname = '../preprocessedData/Batch1And2_listCSbyPOS_LoneWords.tsv'
+    #if not os.path.isfile(fname):
+    f = open(fname,'wb')
+    #Format for each line: POS \t Word \t frequency
+    for pos in dict_cs_byTags_LW:
+        list_this_pos = [ (word, dict_cs_byTags_LW[pos][word])  for word in dict_cs_byTags_LW[pos].keys()]
+        list_this_pos.sort(key=lambda x: x[1], reverse=True)
+        for it in list_this_pos:
+            f.write(pos+'\t'+ str(it[0]) + '\t' + str(it[1]) +'\n')
+    f.close()
+    
+    pickle.dump(dict_cs_byTags_LW, open('../preprocessedData/dict_cs_byTags_LW.p','wb'))
+    
+    return (dict_cs_byPhrase, dict_cs_byTags_LW)
 
 
 
 
+
+#################### English
+def produceEnglishPOSHistogram():
+    engPhrasesList = loadEngPhrases()
+    fname = '../preprocessedData/list_engPhrases.txt'
+    f = open(fname,'wb')
+    numTweets = len(engPhrasesList)
+    for item in engPhrasesList:
+        if not 'cs' in item:
+            continue
+        for phrase in item['cs']: # not exactly code-switch phrase
+            if not phrase.strip() == '':
+                f.write(phrase + '\n') 
+    f.close()
+    return producePOShistogram(fname, text_title = 'in ' + str(numTweets) + ' Tweets')
+
+
+def produce50mpaths2POSHistogram():
+    originalFileName = '../Data/BrownClustering/50mpaths2.txt'
+    fin = open(originalFileName, 'rb')
+    outFilename = '../Data/BrownClustering/50mpaths2_onlyWords.txt'
+    fout = open(outFilename, 'wb')
+    weights = []
+    for line in fin:
+        ll = line.split('\t')
+        fout.write(ll[1]+'\n')
+        weights.append(int(ll[2]))
+    fin.close()
+    fout.close()
+    pickle.dump(weights, open('../preprocessedData/brownWords_Weights.p','wb'))
+    print 'Done Generating Word File'
+    
+    # format: key=pos, val=frequency
+    _dictPOS_Brown = producePOShistogram(outFilename, text_title = ' from Brown Cluster Words', weights=weights)
+    return _dictPOS_Brown
+
+def runPOSTagger(fname):
+    p = Popen(['bash',
+               'ark-tweet-nlp-0.3.2/runTagger.sh',
+               '--output-format' ,
+               'pretsv',
+               '--no-confidence',
+               fname], stdin=PIPE, stdout=PIPE, stderr=PIPE)
+
+    output, err = p.communicate()
+    rc = p.returncode
+    print 'Done Tagging. Return Code is %d' % rc
+    return output
+
+def producePOShistogram(fname, text_title, weights = None):
+    output = runPOSTagger(fname)
+    ### 
+    #listPhrases = pickle.load(open('../preprocessedData/list_cs_phrases.p', 'rb'))
+    _dictPOS = {}
+    lineNum = 0
+    for line in output.splitlines():
+        result = line.split('\t')
+        #list_tokens = result[0].split(' ')
+        list_tags = result[1].split(' ')
+        # NOTE: Even though the input per line is one word, it can be interpreted as more than one token
+        for tag in list_tags:
+            if weights == None:
+                increment = 1
+            else:
+                increment = weights[lineNum]
+            if not tag in _dictPOS:
+                _dictPOS[tag] = increment
+            else:
+                _dictPOS[tag] += increment
+        lineNum += 1
+    tags = POS_KEYS
+    listFreq = [None]*len(tags)
+    sumTags = 0
+    for i in range(len(tags)):
+        if tags[i] in _dictPOS:
+            listFreq[i] = _dictPOS[tags[i]]
+        else:
+            listFreq[i] = 0
+        sumTags += listFreq[i]
+    print 'Total number of tags(tokens) = %d' % sumTags
+    for i in range(len(tags)):
+        listFreq[i] /= sumTags*1.0
+    print listFreq
+    print tags
+    print type(tags[0])
+    df = pd.DataFrame({'POS':tags, 'Density':listFreq})
+    p = (ggplot(aes(x='POS',y='Density'), data=df) +
+     geom_bar(stat='identity', fill='#729EAB') +
+      labs(title='Distribution for Part of Speech of ' + str(sumTags) + ' English Words' + text_title) )
+    print p
+    return _dictPOS
+    
 
 def main():
     pass
@@ -370,4 +474,7 @@ if __name__ == "__main__":
     #histogramStanfordNER()
     
     # 3. Sanity Check
-    ob = AnalyzeCSPhrases()
+    #ob = AnalyzeCSPhrases()
+    
+    #produceEnglishPOSHistogram()
+    produce50mpaths2POSHistogram()
