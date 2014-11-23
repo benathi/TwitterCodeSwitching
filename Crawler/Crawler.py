@@ -24,6 +24,7 @@ END_ID = 32800000
 
 def writeUrlListToFile():
     for id in range(START_ID, END_ID):
+        print 'Processing File id = %d' % id
         currentUrl = BASE_URL + str(id)
         #r = requests.get(currentUrl)
         urlf = urllib2.urlopen('http://pantip.com/topic/32881890')
