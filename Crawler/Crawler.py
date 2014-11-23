@@ -45,10 +45,9 @@ def writeUrlListToFile():
         f2 = open('../Data/Pantip/' + str(id) + '_tags.txt', 'wb')
         for item in tag_items:
             f2.write(item.get_text().encode('utf-8') + "\n")
-    return post_title, post_story, tag_items
 
 '''def main():
     pass'''
     
 if __name__ == "__main__":
-    post_title, post_story, tag_items = writeUrlListToFile()
+    writeUrlListToFile()
