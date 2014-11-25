@@ -16,7 +16,6 @@ from ggplot import *
 import pandas as pd
 from subprocess import Popen, call, PIPE
 from nltk.tag.stanford import NERTagger
-from mercurial.phases import listphases
 import os
 import sys
 #POS_KEYS = ['!', '$', '&', ',', 'A', 'E', 'D', 'G', 'L', 'O', 'N', 'P', 'S', 'R', 'U', 'T', 'V', 'Y', 'X', 'Z', '^', '~']
@@ -333,7 +332,7 @@ def AnalyzeCSPhrases():
     ### End Initialization
     
     ### Question: Should I include tokens in phrases? 
-    
+    ### Only Lone Words********** (only one token per code-switch)
     for key in dict_cs_byPhrase:
         if len(dict_cs_byPhrase[key]['tweet_tokens']) == 1:
             pos = dict_cs_byPhrase[key]['tweet_tags'][0]
@@ -462,6 +461,7 @@ def main():
     pass
     
 if __name__ == "__main__":
+    pass
     #p = histogram_CSLength()
     #(listWords, listPhrases) = listMostFrequent()
     # 1. Tag Tweets with CMU Tweet Tool
@@ -477,4 +477,4 @@ if __name__ == "__main__":
     #ob = AnalyzeCSPhrases()
     
     #produceEnglishPOSHistogram()
-    produce50mpaths2POSHistogram()
+    #produce50mpaths2POSHistogram()
