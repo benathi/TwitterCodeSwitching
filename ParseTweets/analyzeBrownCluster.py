@@ -55,23 +55,15 @@ def prepareEngDictByPOS():
     # tested - correct weight
     pickle.dump(dict_eng_by_POS, open('../preprocessedData/brownWords_dict_byPOS.p','wb'))
 
-# First Version: Only Both(either or)
-# New Version: 
-def prepareInputBrownCluster(pos_list = ['V','N','A'], either=False):
-    if either:
-        return prepareInputBrownCluster_EitherOr(pos_list)
-    else:
-        print 'Preparing Input for Brown Cluster: Both in Dict'
-        return prepareInputBrownCluster_Both(pos_list)
+def prepareInputBrownCluster():
     
-def prepareInputBrownCluster_Both(pos_list):
     #_, dict_cs_byPOS = AnalyzeCSPhrases()
     dict_cs_byPOS_LW = pickle.load(open('../preprocessedData/dict_cs_byTags_LW.p','rb'))
     dict_eng_byPOS = pickle.load( open('../preprocessedData/brownWords_dict_byPOS.p','rb'))
     
-    # Use only the part of speech specified
+    # Use only Noun, Verb, Adjective
     combinedDict = {}
-    for pos in pos_list: # pos_list = ['V', 'N', 'A'] by default
+    for pos in ['V','N','A']:
         for word in dict_cs_byPOS_LW[pos]:
             if not word in combinedDict:
                 combinedDict[word] = 0
@@ -79,71 +71,11 @@ def prepareInputBrownCluster_Both(pos_list):
             if not word in combinedDict:
                 combinedDict[word] = 0
     #####
-    list_words = []
-    list_words_notInEng = []
-    numWordsCS_Considered_distinct = 0
-    numWordsInBoth_distinct = 0
-    numWordsCS_Considered = 0
-    numWordsInBoth = 0
-    
-    for pos in pos_list:
-        for word in dict_cs_byPOS_LW[pos]:
-            numWordsCS_Considered_distinct += 1
-            numWordsCS_Considered += dict_cs_byPOS_LW[pos][word]
-            # Add to the common list only if 
-            # the word in cs is in the Eng Dict
-            # note:revert
-            word_lower = word ##### NOTE: This is a quick fix (see it we should change the dict permanently)
-            if word_lower in dict_eng_byPOS[pos]:
-                numWordsInBoth_distinct += 1
-                numWordsInBoth +=  dict_cs_byPOS_LW[pos][word]
-                numWordsInBoth +=  dict_eng_byPOS[pos][word_lower]
-                list_words.append(word)
-            else:
-                list_words_notInEng.append(word_lower)
-    print 'The Number of Distinct CS Words Considered = %d' % numWordsCS_Considered_distinct
-    print 'The Number of Distinct Words in Both CS and Eng Dict = %d' % numWordsInBoth_distinct
-    
-    print 'The Number of Total CS Words Considerd = %d' % numWordsCS_Considered
-    print 'The Number of Words in Both CS/Eng = %d' % numWordsInBoth
-    
-    print 'List of words that are not in Eng Dict'
-    print list_words_notInEng
-    
     fname = '../preprocessedData/combinedBrownCS.txt'
     f = open(fname,'wb')
-    for word in list_words:
+    for word in combinedDict:
         f.write(word + '\n')
     return (dict_cs_byPOS_LW, dict_eng_byPOS, fname)
-
-
-def prepareInputBrownCluster_EitherOr(pos_list):
-    #_, dict_cs_byPOS = AnalyzeCSPhrases()
-    dict_cs_byPOS_LW = pickle.load(open('../preprocessedData/dict_cs_byTags_LW.p','rb'))
-    dict_eng_byPOS = pickle.load( open('../preprocessedData/brownWords_dict_byPOS.p','rb'))
-    
-    # Use only Noun, Verb, Adjective
-    combinedDict = {}
-    for pos in pos_list: # pos_list = ['V', 'N', 'A'] by default
-        for word in dict_cs_byPOS_LW[pos]:
-            if not word in combinedDict:
-                combinedDict[word] = 0
-        for word in dict_eng_byPOS[pos]:
-            if not word in combinedDict:
-                combinedDict[word] = 0
-    ####
-    list_words = combinedDict.keys()
-    
-    fname = '../preprocessedData/combinedBrownCS.txt'
-    f = open(fname,'wb')
-    for word in list_words:
-        f.write(word + '\n')
-    return (dict_cs_byPOS_LW, dict_eng_byPOS, fname)
-
-
-
-
-
 
 def runBrownCluster(inputFileName, K):
     wbrownFileName = '/Users/ben/Development/GitRepositories/brown-cluster/wcluster'
@@ -182,21 +114,15 @@ def loadClusterResults():
             print "Warning: Duplicate Word"
     return dict_cluster
 
-def generateParallelDistribution(pos_list=['V','A','N']): # TODO : Use this POS list
+def generateParallelDistribution():
     dict_cs_byPOS_LW = pickle.load(open('../preprocessedData/dict_cs_byTags_LW.p','rb'))
     dict_eng_byPOS = pickle.load( open('../preprocessedData/brownWords_dict_byPOS.p','rb'))
-    
-    dict_cs = {}
-    dict_eng = {}
-    for pos in pos_list:
-        dict_cs = dict(dict_cs.items() + dict_cs_byPOS_LW[pos].items())
-        dict_eng = dict(dict_eng.items() + dict_eng_byPOS[pos].items())
-    #dict_cs = dict(  dict_cs_byPOS_LW['V'].items() + 
-    #                 dict_cs_byPOS_LW['A'].items() +
-    #                 dict_cs_byPOS_LW['N'].items() )
-    #dict_eng = dict( dict_eng_byPOS['V'].items() +
-    #                 dict_eng_byPOS['A'].items() +
-    #                 dict_eng_byPOS['N'].items())
+    dict_cs = dict(  dict_cs_byPOS_LW['V'].items() + 
+                     dict_cs_byPOS_LW['A'].items() +
+                     dict_cs_byPOS_LW['N'].items() )
+    dict_eng = dict( dict_eng_byPOS['V'].items() +
+                     dict_eng_byPOS['A'].items() +
+                     dict_eng_byPOS['N'].items())
     cs_frequency = {}
     eng_frequency = {}
     dict_cluster = loadClusterResults()
@@ -229,24 +155,20 @@ def generateParallelDistribution(pos_list=['V','A','N']): # TODO : Use this POS 
         
         eng_density = eng_frequency[cl]/(1.0*eng_numWords)
         eng_list.append(eng_density)
-    print '[Non-Distinct]Number of CS Words = %d' % cs_numWords
-    print '[Non-Distinct]Number of Eng Words = %d' % eng_numWords
+    print 'Number of CS Words = %d' % cs_numWords
+    print 'Number of Eng Words = %d' % eng_numWords
     print cs_list
     print eng_list
     
-    #### Print sample - Change here
+    #### Print sample
     #format {'cl1':['word1':freq1, 'word2':freq2 ], ['cl2':[]}
-    dict_to_consider = dict_cs
-    print 'Listing Words in Cluster for CS'
-    #print 'Listing Words in Cluster for Eng Dict'
-    
     dict_cluster_listWords = {}
     for cl in clusters:
         dict_cluster_listWords[cl] = []
     for word in dict_cluster:
         sumFreq = 0
-        if word in dict_to_consider:
-            sumFreq += dict_to_consider[word]
+        if word in dict_cs:
+            sumFreq += dict_cs[word]
         #if word in dict_eng:
         #    sumFreq += dict_eng[word]
         cluster = dict_cluster[word]
@@ -259,9 +181,6 @@ def generateParallelDistribution(pos_list=['V','A','N']): # TODO : Use this POS 
         print "Sample Words for Cluster %s" % key
         numWords = len(_l)
         print _l[0:min(len,25)]
-        
-        
-    
     
     #### Plot
     Legend = ['Code-Switching']*len(clusters) + ['English-Tweets']*len(clusters)
@@ -281,9 +200,9 @@ def generateParallelDistribution(pos_list=['V','A','N']): # TODO : Use this POS 
     
 
 if __name__ == "__main__":
-    pos_list = ['V','N']
-    prepareEngDictByPOS() # done: saved to pickle
-    dict_cs_byPOS_LW, dict_eng_byPOS, inputFileName_toCluster = prepareInputBrownCluster(pos_list)
-    runBrownCluster('/Users/ben/Development/CS6742TwitterProject/preprocessedData/combinedBrownCS.txt', K=10)
-    _d = generateParallelDistribution(pos_list)
+    pass
+    #prepareEngDictByPOS() # done: saved to pickle
+    #dict_cs_byPOS_LW, dict_eng_byPOS, inputFileName_toCluster = prepareInputBrownCluster()
+    #runBrownCluster('/Users/ben/Development/CS6742TwitterProject/preprocessedData/combinedBrownCS.txt', K=10)
+    _d = generateParallelDistribution()
     
