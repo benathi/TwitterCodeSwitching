@@ -9,3 +9,4 @@ stanford-ner*
 *.png
 *.int
 *.strdb
+preprocessedData/*
