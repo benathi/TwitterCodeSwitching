@@ -24,7 +24,7 @@ import re
 import pythai
 
 # Default folder is ThaiBatch1
-def convertTweetToSegmentedText(listFileNames):
+def convertTextToSegmentedText(listFileNames):
     segmentedWordsPath = '../Data/SegmentedTweets/'
     numTweets = 0
     for fname in listFileNames:
@@ -33,7 +33,7 @@ def convertTweetToSegmentedText(listFileNames):
         
         fout_name_m = re.search(r'[/]([\w]*).txt',fname)
         fout_name =  fout_name_m.group(1)
-        fout_name_full = os.path.join(segmentedWordsPath, fout_name + '_SEG.txt')
+        fout_name_full = os.path.join(segmentedWordsPath, fout_name + '_Thai.txt')
         fout = open(fout_name_full,'wb')
         
         print 'Processing File %s. Writing Result to %s' % (fname, fout_name_full)
@@ -41,30 +41,26 @@ def convertTweetToSegmentedText(listFileNames):
         tweetsFile = open(fname)
         for line in tweetsFile:
             print "Processing Tweet %d" % numTweets
+            numTweets += 1
+            
+            tweet_text_str = line.strip()               # type string
+            tweet_text = tweet_text_str.decode('utf-8') # type unicode
+            
             try:
-                tweet = json.loads(line)
-                numTweets += 1
-            except ValueError:
-                #print 'Warning: Invalid/Incomplete Tweet Encountered. Skipping to Next Tweet'
-                #print line
-                # skip the rest of the for loop and continue
-                continue
-            if tweet.has_key('text'):
-                _text = tweet['text']#.decode('utf-8')
-                #print _text
-                text_noEmji = removeEmoji(_text)
-                #print text_noEmji
-                # the following function takes a unicode string a outputs a list of segmented (Thai) words
-                segmentedList = textToSegmentedList(text_noEmji)
-                tabJoinedWords = ('\t'.join(segmentedList))
-                fout.write( tabJoinedWords.encode('utf-8') + '\n')
+                segmentedList = textToSegmentedList(tweet_text)
+            except:
+                print 'Error Occured During Text Segmentation. File %s. Line %s' %(fname, line)
+                segmentedList = []
+            tabJoinedWords = ('\t'.join(segmentedList))
+            fout.write( tabJoinedWords.encode('utf-8') + '\n')
         numTweets += 1
 
 
 def textToSegmentedList(sentence):
     # change later
-    #return sentence.split(' ')
+    #return sentence.split(u' ')
     return pythai.split(sentence)
+    
 
 
 def getListTweetFiles(dir='../Data/ThaiBatch1'):
@@ -73,27 +69,11 @@ def getListTweetFiles(dir='../Data/ThaiBatch1'):
         _listFiles[i] = os.path.join(dir, _listFiles[i])
     return _listFiles
 
-def testFoutName():
-    fname = '../Data/ThaiBatch1/output1.txt'
-    fout_name_m = re.search(r'[/]([\w]*).txt',fname)
-    print fout_name_m.group(1)
-
-def removeEmoji(text):
-    # Replacing Emoji 
-    # Surrogates for emoji are in the range [\uD800-\uDBFF][\uDC00-\uDFFF]
-    return re.sub(u'[\uD800-\uDBFF][\uDC00-\uDFFF]',' ',text)
-
 def main():
-    pass
-    #print getListTweetFiles()
-    #testFoutName()
-    convertTweetToSegmentedText(['../Data/ThaiBatch1/output1.txt']) # TEST
-    all_listFiles = ( getListTweetFiles('../Data/ThaiBatch1') + 
-                      getListTweetFiles('../Data/ThaiBatch2') + 
-                      getListTweetFiles('../Data/ThaiBatch3') )
-    print all_listFiles
-    #convertTweetToSegmentedText(getListTweetFiles('../Data/ThaiBatch1'))
-    # Then do the same for ThaiBatch1 + ThaiBatch2 + ThaiBatch3
+    convertTextToSegmentedText(['../Data/pre_SegmentedTweets/output1_SEG.txt']) # TEST
+    #all_listFiles = ( getListTweetFiles('../Data/pre_SegmentedTweets/') )
+    #convertTextToSegmentedText(all_listFiles)
+
     
 if __name__ == "__main__":
     main()
