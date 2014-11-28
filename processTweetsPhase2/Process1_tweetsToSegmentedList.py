@@ -27,6 +27,7 @@ import pythai
 def convertTextToSegmentedText(listFileNames):
     segmentedWordsPath = '../Data/SegmentedTweets/'
     numTweets = 0
+    numError = 0
     for fname in listFileNames:
         if not '.txt' in fname: 
             continue
@@ -49,11 +50,13 @@ def convertTextToSegmentedText(listFileNames):
             try:
                 segmentedList = textToSegmentedList(tweet_text)
             except:
+                numError += 1
                 print 'Error Occured During Text Segmentation. File %s. Line %s' %(fname, line)
                 segmentedList = []
             tabJoinedWords = ('\t'.join(segmentedList))
             fout.write( tabJoinedWords.encode('utf-8') + '\n')
         numTweets += 1
+    print 'Number of Errors = %d' % numError
 
 
 def textToSegmentedList(sentence):

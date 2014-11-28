@@ -41,9 +41,9 @@ def convertTweetToSegmentedText(listFileNames):
                 continue
             if tweet.has_key('text'):
                 _text = tweet['text']#.decode('utf-8')
-                #print _text
+                print type(_text)
                 text_noEmoji = removeEmoji(_text)
-                #print text_noEmoji
+                print text_noEmoji
                 # the following function takes a unicode string a outputs a list of segmented (Thai) words
                 #segmentedList = textToSegmentedList(text_noEmoji)
                 #tabJoinedWords = ('\t'.join(segmentedList))
@@ -70,15 +70,23 @@ def testFoutName():
 def removeEmoji(text):
     # Replacing Emoji 
     # Surrogates for emoji are in the range [\uD800-\uDBFF][\uDC00-\uDFFF]
-    new_text1 = re.sub(u'[\uD800-\uDBFF][\uDC00-\uDFFF]',' ',text)
-    return re.sub(u'\s',' ',new_text1)
+    new_text_00 = re.sub(u'[\uD800-\uDBFF][\uDC00-\uDFFF]',' ',text)
+    new_text_01 = re.sub(u'[\u2600-\u27BF]',' ',new_text_00)
+    new_text_02 = re.sub(u'[\uD83C][\uDF00-\uDFFF]',' ',new_text_01)
+    new_text_03 = re.sub(u'[\uD83D][\uDC00-\uDE4F]',' ',new_text_02)
+    new_text_04 = re.sub(u'[\uD83D][\uDE80-\uDEFF]',' ',new_text_03)
+    
+    new_text = new_text_04
+    
+    return re.sub(u'\s',' ',new_text)
 
 def main():
     pass
     #print getListTweetFiles()
     #testFoutName()
     #convertTweetToSegmentedText(['../Data/ThaiBatch1/output1.txt']) # TEST
-    all_listFiles = ( getListTweetFiles('../Data/ThaiBatch2') + 
+    all_listFiles = ( getListTweetFiles('../Data/ThaiBatch1') +
+                     getListTweetFiles('../Data/ThaiBatch2') + 
                       getListTweetFiles('../Data/ThaiBatch3') )
     #print all_listFiles
     #convertTweetToSegmentedText(getListTweetFiles('../Data/ThaiBatch1'))
