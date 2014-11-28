@@ -21,7 +21,7 @@ import pickle
 import langid
 import json
 import re
-#import pythai
+import pythai
 
 # Default folder is ThaiBatch1
 def convertTweetToSegmentedText(listFileNames):
@@ -63,8 +63,8 @@ def convertTweetToSegmentedText(listFileNames):
 
 def textToSegmentedList(sentence):
     # change later
-    return sentence.split(' ')
-    # return pythai.split(sentence)
+    #return sentence.split(' ')
+    return pythai.split(sentence)
 
 
 def getListTweetFiles(dir='../Data/ThaiBatch1'):
