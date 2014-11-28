@@ -52,7 +52,8 @@ def convertTweetToSegmentedText(listFileNames):
             if tweet.has_key('text'):
                 _text = tweet['text']#.decode('utf-8')
                 #print _text
-                print type(_text)
+                text_noEmji = removeEmoji(_text)
+                #print text_noEmji
                 # the following function takes a unicode string a outputs a list of segmented (Thai) words
                 segmentedList = textToSegmentedList(_text)
                 tabJoinedWords = ('\t'.join(segmentedList))
@@ -76,6 +77,11 @@ def testFoutName():
     fname = '../Data/ThaiBatch1/output1.txt'
     fout_name_m = re.search(r'[/]([\w]*).txt',fname)
     print fout_name_m.group(1)
+
+def removeEmoji(text):
+    # Replacing Emoji 
+    # Surrogates for emoji are in the range [\uD800-\uDBFF][\uDC00-\uDFFF]
+    return re.sub(u'[\uD800-\uDBFF][\uDC00-\uDFFF]',' ',text)
 
 def main():
     pass
