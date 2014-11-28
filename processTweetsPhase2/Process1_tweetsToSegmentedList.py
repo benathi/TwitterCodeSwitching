@@ -55,7 +55,7 @@ def convertTweetToSegmentedText(listFileNames):
                 text_noEmji = removeEmoji(_text)
                 #print text_noEmji
                 # the following function takes a unicode string a outputs a list of segmented (Thai) words
-                segmentedList = textToSegmentedList(_text)
+                segmentedList = textToSegmentedList(text_noEmji)
                 tabJoinedWords = ('\t'.join(segmentedList))
                 fout.write( tabJoinedWords.encode('utf-8') + '\n')
         numTweets += 1
