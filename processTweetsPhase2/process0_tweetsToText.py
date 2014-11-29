@@ -5,6 +5,7 @@ Created on Nov 27, 2014
 
 Process 0: Added because python on ubuntu could not handle regular expression for emoji
 
+Note: Down arrow not include in reg exp for emoji. Maybe filter by Thai character and English character?
 '''
 #from __future__ import division
 #import numpy as np
