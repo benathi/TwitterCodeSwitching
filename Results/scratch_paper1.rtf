@@ -1,0 +1,46 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1343\cocoasubrtf160
+{\fonttbl\f0\fnil\fcharset0 Monaco;}
+{\colortbl;\red255\green255\blue255;\red0\green170\blue0;\red192\green192\blue192;}
+\margl1440\margr1440\vieww10800\viewh8400\viewkind0
+\deftab720
+\pard\pardeftab720
+
+\f0\fs26 \cf0             \cf2 '''cs_index = [i for i in range(\ul len\ulnone (list_cs_indicator1)) if list_cs_indicator1[i] ]\cf0 \
+\pard\pardeftab720
+\cf2             if \ul len\ulnone (cs_index) > 0:\cf0 \
+\cf2                 csWords = ''\cf0 \
+\cf2                 for index in cs_index:\cf0 \
+\cf2                     csWords += (list_tagSep2[index] + ' ')\cf0 \
+\cf2                 fpos.write(csWords.strip() + '\\n')'''\
+\
+\
+\pard\pardeftab720
+\cf0 \
+        \cf2 ''' Filter 2.\cf0 \
+\pard\pardeftab720
+\cf2                 Filter by Part of Speech \cf0 \
+\cf2                 If the part of speech is not in the accepted list, \cf0 \
+\cf2                 set the \ul cs\ulnone  indicator to false.\cf0 \
+\cf2                 \cf0 \
+\cf2                 This is done per input file\cf0 \
+\cf2         '''\cf0 \
+        \cf3 # 2.1 Write input to file\cf0 \
+        \
+        \cf3 # 2.2 Run POS \ul Tagger\ulnone  and save the results\cf0 \
+        \
+         \
+        \cf3 # 2.3 Determine if it's a CS or not\cf0 \
+        \
+                \cf2 \ul \ulc2 '\ulnone ''for i in range(\ul len\ulnone (list_tagSep2)):\cf0 \
+\cf2                 el = list_tagSep2[i]\cf0 \
+\cf2                 # if it's potentially Code-Switching, \cf0 \
+\cf2                 if list_cs_indicator1[i]:\cf0 \
+\cf2                     \ul pos\ulnone  = tweetPartOfSpeech(el)\cf0 \
+\cf2                     if not \ul pos\ulnone  in accepted_pos:\cf0 \
+\cf2                         list_cs_indicator1[i] = False'''\
+\
+\
+(distinct)\
+\pard\pardeftab720
+\cf0 The number of CS=	4186\
+The Number of N-Gram=	2552521}

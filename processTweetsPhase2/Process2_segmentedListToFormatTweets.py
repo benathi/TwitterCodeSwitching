@@ -26,7 +26,15 @@ from subprocess import Popen, call, PIPE
 
 # The list of accepted part of speech
 accepted_pos = ['&','A','O','N','P','R','T','V']
+d_enchant = enchant.Dict('en_US')
 
+
+''' TODO 
+To filter out:
+semicolon, colon, 
+
+Alternative: Filter out other character that are not Thai or Alpha Numeric? (Try this)
+'''
 def process2_part1(listFileNames, verbose=False):
     # Format: key = n-gram
     # value = {freq-cs: , freq-non-cs:}
@@ -103,13 +111,16 @@ def process2_part1(listFileNames, verbose=False):
 
 
 def process2_part2():
-    d_enchant = enchant.Dict('en_US')
+    
     
     # 1. read file and write result to temp.txt for pos tagging
     fin = open('../Data/process2/process2_part1.txt','rb')
     pos_file = '../Data/process2/temp.txt'
     fpos = open(pos_file, 'wb')
+    numLine = -1
     for line in fin:
+        numLine += 1
+        print 'To Temp File - Write Line %d' % numLine
         _d = json.loads(line)
         word_list = _d['text']
         index_cs = _d['cs-index']
@@ -118,7 +129,9 @@ def process2_part2():
             for index in index_cs:
                 cs_words_list.append(word_list[index])
             cs_words = ' '.join(cs_words_list)
-            fpos.write(cs_words + '\n')
+            #print type(cs_words)
+            #print cs_words
+            fpos.write(cs_words.encode('utf-8') + '\n')
     fpos.close()
     result = runPOSTagger(pos_file).split('\n')
     
@@ -130,6 +143,7 @@ def process2_part2():
     for line in fin:
         _d = json.loads(line)
         index_cs = _d['cs-index']
+        new_cs_indicator = []
         if len(index_cs) > 0:
             resultLineNum += 1
             print 'CS #%d-------------------------------------------------' % resultLineNum
@@ -144,7 +158,6 @@ def process2_part2():
             #print _d['text']
             #print index_cs
             #_d['pos'] = list_tags
-            new_cs_indicator = []
             for index,pos in zip(index_cs, list_tags):
                 token = _d['text'][index]
                 # If POS is in the accepted list and it's a dictionary word
@@ -153,9 +166,29 @@ def process2_part2():
                         print '##############Yay########### CS=%s' % (token)
                         new_cs_indicator.append(index)
                         numSuccessfulCS += 1
-            _d['cs-index'] = new_cs_indicator
-            _d['cs-word'] = [_d['text'][index] for index in new_cs_indicator]
-        fout.write(json.dumps(_d))
+        _newDict = {} # store only thai text, code-switching word, and position of code-switching words
+        #textThai = _d['text']
+        #for i in index_cs:
+        #    textThai[i] = '\t'
+        #textThaiString = '\t'.join(textThai)
+        #_newDict['text-thai-list'] = textThaiString.split('\t')
+        #_newDict['cs-word-list'] = [_d['text'][index] for index in new_cs_indicator]
+        
+        
+        _newDict['text-list'] = _d['text']
+        _newDict['cs-word-list'] = [_d['text'][index] for index in new_cs_indicator]
+        if len(_newDict['cs-word-list']) > 0:
+            print _newDict['text-list']
+            print _newDict['cs-word-list']
+        
+        #for i in index_cs:
+        #    if i not in new_cs_indicator:
+        #        textThai[i] = ''
+        #textThaiString = '\t'.join(textThai)
+        #textThai2 = textThaiString.split('\t')        
+        #indexCS_thaiText = [j for j in range(len(textThai2)) if textThai2[i] in _newDict['cs-word']]
+        
+        fout.write(json.dumps(_newDict))
         fout.write('\n')
     print 'Total Number of CS=%d' % numSuccessfulCS
 
@@ -210,16 +243,23 @@ def getListInputFiles(dir='../Data/SegmentedTweets'):
 
 def main():
     ''' Part 1 '''
-    list_inputFiles = getListInputFiles()
-    #list_inputFiles = ['../Data/SegmentedTweets/output1_SEG_Thai.txt']
-    process2_part1(list_inputFiles)
+    #list_inputFiles = getListInputFiles()
+    #process2_part1(list_inputFiles)
     ''' Part 2 '''
     process2_part2()
     
 def test():
     print tweetPartOfSpeech('Ben goes to the mall.')
     print tweetPartOfSpeech('Benni\n \nI want\n \nNo\n')
-    
+
+def testWordInDict():
+    # All these lone words are in dict
+    print d_enchant.check('L')
+    print d_enchant.check('D')
+    print d_enchant.check('l')
+    print d_enchant.check('d')
+
 if __name__ == "__main__":
     main()
     #test()
+    #testWordInDict()
