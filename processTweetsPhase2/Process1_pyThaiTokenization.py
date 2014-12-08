@@ -22,6 +22,7 @@ import langid
 import json
 import re
 import pythai
+from process01_prePyThai import TEXT, TH_INDICATOR
 
 # Default folder is ThaiBatch1
 def convertTextToSegmentedText(listFileNames):
@@ -40,22 +41,28 @@ def convertTextToSegmentedText(listFileNames):
         print 'Processing File %s. Writing Result to %s' % (fname, fout_name_full)
         
         tweetsFile = open(fname)
-        for line in tweetsFile:
+        for _line in tweetsFile:
             print "Processing Tweet %d" % numTweets
             numTweets += 1
+            tweet = json.loads(_line)
+            textList = tweet[TEXT]
+            textListIndicator = tweet[TH_INDICATOR]
             
-            tweet_text_str = line.strip()               # type string
-            tweet_text = tweet_text_str.decode('utf-8') # type unicode
-            
-            try:
-                segmentedList = textToSegmentedList(tweet_text)
-            except:
-                numError += 1
-                print 'Error Occured During Text Segmentation. File %s. Line %s' %(fname, line)
-                segmentedList = []
-            tabJoinedWords = ('\t'.join(segmentedList))
-            fout.write( tabJoinedWords.encode('utf-8') + '\n')
-        numTweets += 1
+            for i in range(len(textList)):
+                if textListIndicator[i]:
+                    text = textList[i]
+                    try:
+                        segmentedList = textToSegmentedList(text)
+                    except:
+                        numError += 1
+                        print 'Error Occured During Text Segmentation. File %s.' %(fname)
+                        print textList
+                        segmentedList = []
+                    # rewriting new value
+                    textList[i] = ' '.join(segmentedList)
+
+            fout.write(json.dumps(tweet))
+            fout.write('\n')
     print 'Number of Errors = %d' % numError
 
 
@@ -72,11 +79,13 @@ def getListTweetFiles(dir='../Data/ThaiBatch1'):
         _listFiles[i] = os.path.join(dir, _listFiles[i])
     return _listFiles
 
-def main():
-    convertTextToSegmentedText(['../Data/pre_SegmentedTweets/output1_SEG.txt']) # TEST
-    #all_listFiles = ( getListTweetFiles('../Data/pre_SegmentedTweets/') )
-    #convertTextToSegmentedText(all_listFiles)
 
+def test():
+    convertTextToSegmentedText(['../Data/process01/output1_mini_textList.txt']) # TEST
+
+def main():
+    all_listFiles = ( getListTweetFiles('../Data/process01/') )
+    convertTextToSegmentedText(all_listFiles)
     
 if __name__ == "__main__":
-    main()
+    test()

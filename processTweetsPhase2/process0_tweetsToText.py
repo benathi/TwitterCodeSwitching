@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 '''
 Created on Nov 27, 2014
 
@@ -16,21 +17,23 @@ import re
 
 # Default folder is ThaiBatch1
 def convertTweetToSegmentedText(listFileNames):
-    segmentedWordsPath = '../Data/pre_SegmentedTweets/'
+    segmentedWordsPath = '../Data/process0/'
     numTweets = 0
+    numTweets_RT = 0
     for fname in listFileNames:
         if not '.txt' in fname:
             continue
         
         fout_name_m = re.search(r'[/]([\w]*).txt',fname)
         fout_name =  fout_name_m.group(1)
-        fout_name_full = os.path.join(segmentedWordsPath, fout_name + '_SEG.txt')
+        fout_name_full = os.path.join(segmentedWordsPath, fout_name + '_mini.txt')
         fout = open(fout_name_full,'wb')
         
         print 'Processing File %s. Writing Result to %s' % (fname, fout_name_full)
         
         tweetsFile = open(fname)
         for line in tweetsFile:
+            _d = {}
             print "Processing Tweet %d" % numTweets
             try:
                 tweet = json.loads(line)
@@ -40,21 +43,35 @@ def convertTweetToSegmentedText(listFileNames):
                 #print line
                 # skip the rest of the for loop and continue
                 continue
-            if tweet.has_key('text'):
-                _text = tweet['text']#.decode('utf-8')
-                print type(_text)
-                text_noEmoji = removeEmoji(_text)
-                print text_noEmoji
+            if tweet.has_key('text') and tweet.has_key('id_str') and tweet.has_key('retweeted'):
+                _d['text'] = tweet['text']
+                _d['id_str'] = tweet['id_str']
+                # Note: the retweeted tag from the original json is ALWAYS false for some reason
+                #_d['retweeted'] = tweet['retweeted']
+                _d['retweeted'] = isRT(_d['text'])
+                if _d['retweeted']:
+                    numTweets_RT += 1
+                #_text = tweet['text']#.decode('utf-8')
+                #print type(_text)
+                #text_noEmoji = removeEmoji(_text)
+                #print text_noEmoji
                 # the following function takes a unicode string a outputs a list of segmented (Thai) words
                 #segmentedList = textToSegmentedList(text_noEmoji)
                 #tabJoinedWords = ('\t'.join(segmentedList))
                 #fout.write( tabJoinedWords.encode('utf-8') + '\n')
                 #print _text
                 #print text_noEmoji
-                fout.write(text_noEmoji.encode('utf-8') +'\n')
+                #fout.write(text_noEmoji.encode('utf-8') +'\n')
+                fout.write(json.dumps(_d))
+                fout.write("\n")
         numTweets += 1
-
-
+    print 'The number of Total Tweets = %d', numTweets
+    print 'The number of RT = %d', numTweets_RT
+'''
+Note: as of Dec 7, 2014 (Final Data Set)
+The number of Total Tweets = %d 2583847
+The number of RT = %d 1808427
+'''
 
 
 def getListTweetFiles(dir='../Data/ThaiBatch1'):
@@ -81,19 +98,29 @@ def removeEmoji(text):
     
     return re.sub(u'\s',' ',new_text)
 
+
+''' The tag 'retweeted' in json does not truly indicate retweet for some reason'''
+def testRetweetManual():
+    s = u'RT @kongkangpcy: ยังคงรักเธอ ยังเฝ้ารออยู่เหมือนอย่างเคย'
+    isRT(s)
+    s2 = u'no retweet'
+    isRT(s2)
+
+def isRT(s):
+    m = re.match(r'RT @[\w]+:', s)
+    #print m
+    return m != None
+    
+
 def main():
-    pass
-    #print getListTweetFiles()
-    #testFoutName()
-    #convertTweetToSegmentedText(['../Data/ThaiBatch1/output1.txt']) # TEST
     all_listFiles = ( getListTweetFiles('../Data/ThaiBatch1') +
                      getListTweetFiles('../Data/ThaiBatch2') + 
-                      getListTweetFiles('../Data/ThaiBatch3') )
-    #print all_listFiles
-    #convertTweetToSegmentedText(getListTweetFiles('../Data/ThaiBatch1'))
+                      getListTweetFiles('../Data/ThaiBatch3') + 
+                      getListTweetFiles('../Data/ThaiBatch4') )
+    
+    #all_listFiles = ( getListTweetFiles('../Data/ThaiBatch1') )
     convertTweetToSegmentedText(all_listFiles)
     # Then do the same for ThaiBatch1 + ThaiBatch2 + ThaiBatch3
-    
 
     
 if __name__ == "__main__":
