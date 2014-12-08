@@ -62,9 +62,10 @@ def tweetTextToDisjointedList(listFileNames, sanityCheck=False):
     print 'Number of Tweets = %d' % numTweets
     print 'Number of Tweets Written (Non-RT) = %d' % numTweets_written
 '''
-Note:
+Note: as of Dec 7, 2014
 
-
+Number of Tweets = 2583827
+Number of Tweets Written (Non-RT) = 775400
 '''
 
 thaiRegExp = re.compile(u'[\u0E00-\u0E7F]+')

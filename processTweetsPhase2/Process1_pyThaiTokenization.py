@@ -26,7 +26,7 @@ from process01_prePyThai import TEXT, TH_INDICATOR
 
 # Default folder is ThaiBatch1
 def convertTextToSegmentedText(listFileNames):
-    segmentedWordsPath = '../Data/SegmentedTweets/'
+    segmentedWordsPath = '../Data/process1/'
     numTweets = 0
     numError = 0
     for fname in listFileNames:
