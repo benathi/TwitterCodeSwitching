@@ -28,50 +28,97 @@ def loadSparseInputMatrix():
 
 def performRegression():
     X,Y = loadSparseInputMatrix()
-    logreg = linear_model.LogisticRegression()
+    logreg = linear_model.LogisticRegression(penalty='l2') # can change to l1
     reg_result = logreg.fit(X,Y)
     print 'Done with Regression'
     coef = reg_result.coef_[0]
-    for i in range(len(coef)):
-        if abs(coef[i]) > 0.000000000001:
-            print 'Feature Index %d. Beta = %f' % (i,coef[i])
+    #for i in range(len(coef)):
+    #    if abs(coef[i]) > 0.000000000001:
+    #        print 'Feature Index %d. Beta = %f' % (i,coef[i])
     pickle.dump(reg_result, open('../Data/process5/regressionResult.p', 'wb'))
     print 'The number of Features is ', len(coef)
-
-def analyzeRegressionResult():
+    
+def loadRegressionResult_allData():
     reg_result = pickle.load(open('../Data/process5/regressionResult.p', 'rb'))
+    print 'Done Loading Regression Result - [All Data]'
+    return reg_result
+
+
+def analyzeRegressionSignificance():
+    reg_result = loadRegressionResult_allData()
     print 'The Regression Intercept is' , reg_result.intercept_
     X,Y = loadSparseInputMatrix()
-    #sse = np.sum( (reg_result.predict(X) - Y)**2, axis=0)/float(X.shape[0] - X.shape(1) - 1) # another -1 for parameter
+    
+    coefs = reg_result.coef_[0]
     results = sklearn.feature_selection.univariate_selection.f_regression(X, Y, center=False)
     F_values, p_values =  results
     level = 0.001
     numSignificant = 0
     numTotal = 0
-    for p_val in p_values:
+    numSignificant_pos = 0
+    
+    #for p_val in p_values:
+    for i in range(len(coefs)):
+        coef_val = coefs[i]
+        p_val = p_values[i]
         numTotal += 1
         if p_val < level:
             numSignificant += 1
-            print p_val
+            '''print p_val'''
+            if coef_val > 0:
+                numSignificant_pos += 1
     
+    print 'Shape of X'
+    print np.shape(X)
     print 'Out of %d Features, %d are significant at %f level' % (numTotal, numSignificant, level)
+    print 'The number of positive betas that are significant = %d' % numSignificant_pos
+
+
+def performRegressionSliced(numFold=5):
+    X,Y = loadSparseInputMatrix()
+    logreg = linear_model.LogisticRegression(penalty='l2') # can change to l1
+    m = len(Y)
+    m_regress = m - int(m/numFold)
+    newX = X[:m_regress]
+    newY = Y[:m_regress]
+    print 'Done Slicing X,Y'
+    reg_result = logreg.fit(X,Y)
+    print 'Done with Regression'
+    pickle.dump(reg_result, open('../Data/process5/regressionResultCV5fold.p', 'wb'))
+
+def analyzeRegressionPredicintingStatistics(numFold=5):
+    reg_result = pickle.load(open('../Data/process5/regressionResultCV5fold.p', 'rb'))
+    XX,YY = loadSparseInputMatrix()
+    m = len(YY)
+    m_regress = m-int(m/numFold)
+    Xtest = XX[m_regress:]
+    Ytest = YY[m_regress:]
     
-    predict_Y = reg_result.predict(X)
-    ac_scores = sklearn.metrics.accuracy_score(Y, predict_Y)
+    print '-----------------------------------'
+    predict_Y = reg_result.predict(Xtest)
+    ac_scores = sklearn.metrics.accuracy_score(Ytest, predict_Y)
     print 'The Fraction of Correctly Classified Samples = %f' % ac_scores
     ## got 0.991494 - no way -- this is too high!
     
-    print 'Number of Samples = %d' % len(Y)
-    print 'Number of Code-Switching Instances = %d' % sum(Y)
+    print 'Number of Samples = %d' % len(Ytest)
+    print 'Number of Code-Switching Instances = %d' % sum(Ytest)
     print 'Number of Predicting Code-Switching = %d' % sum(predict_Y)
-    '''
-    Number of Samples = 1892532
-    Number of Code-Switching Instances = 35156
-    Number of Predicting Code-Switching = 19418
-    '''
-    
-    return results
 
+     
+    
+    _fResults = sklearn.metrics.precision_recall_fscore_support(Ytest, predict_Y)
+    _precision, _recall, _fbeta_score, _support = _fResults
+    
+    print 'Precision =', _precision
+    print 'Recall =', _recall
+    print 'Fbeta Score =', _fbeta_score
+    print 'Support', _support
+
+
+#################################################################################
+#################################################################################
+#################################################################################
+#################################################################################
 def testCrossValidation():
     X,Y = loadSparseInputMatrix()
     ## Cross Validation
@@ -111,11 +158,12 @@ def testRegression():
 
 def main():
     pass
-    #testRegression()
     #performRegression()
-    analyzeRegressionResult()
-    #testCrossValidation()
+    #analyzeRegressionSignificance()
+    ''' CV '''
+    #performRegressionSliced()
+    analyzeRegressionPredicintingStatistics()
     
 if __name__ == "__main__":
     main()
-    #results = analyzeRegressionResult()
+    #results = analyzeRegressionSignificance()

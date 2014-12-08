@@ -10,3 +10,7 @@ stanford-ner*
 *.int
 *.strdb
 preprocessedData/*
+Misc/*
+combinedBrownCS*
+Report/*
+Results/*

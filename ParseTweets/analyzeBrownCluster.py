@@ -166,7 +166,7 @@ def visualizeHtml():
     #   /Users/ben/Development/CS6742TwitterProject/ParseTweets/combinedBrownCS-c10-p1.out/paths    
 
 def loadClusterResults():
-    folder = 'combinedBrownCS-c10-p1.out'
+    folder = 'combinedBrownCS-c25-p1.out'    #### CHANGE
     filename = os.path.join(folder, 'paths')
     # format:   key=word, value=cluster
     dict_cluster = {}
@@ -254,12 +254,7 @@ def generateParallelDistribution(pos_list=['V','A','N']): # TODO : Use this POS 
     for key in dict_cluster_listWords:
         dict_cluster_listWords[key].sort(key=lambda x: x[1], reverse=True)
     
-    for key in dict_cluster_listWords:
-        _l = dict_cluster_listWords[key]
-        print "Sample Words for Cluster %s" % key
-        numWords = len(_l)
-        print _l[0:min(len,25)]
-        
+    
         
     
     
@@ -268,7 +263,15 @@ def generateParallelDistribution(pos_list=['V','A','N']): # TODO : Use this POS 
     aggregate_list = cs_list + eng_list
     ag_clusters = clusters + clusters
     
-    df = pd.DataFrame({'Cluster':ag_clusters,'Density':aggregate_list, 'Legend':Legend})
+    
+    #ag_clusters_num = [None]*len(ag_clusters)
+    #for j in range(len(ag_clusters)):
+    #    ag_clusters_num[j] = ag_clusters[j]
+    
+    ag_clusters_num = [str(i) for i in range(len(clusters))] + [str(i) for i in range(len(clusters))]
+    
+    
+    df = pd.DataFrame({'Cluster':ag_clusters_num,'Density':aggregate_list, 'Legend':Legend})
     p = (ggplot(aes(x='Cluster',y='Density',fill='Legend'), data=df) +
      #geom_bar(stat='identity', fill='#729EAB') +
      geom_bar(stat='identity', position='Legend') +
@@ -276,14 +279,21 @@ def generateParallelDistribution(pos_list=['V','A','N']): # TODO : Use this POS 
     print p
     
     
+    for j in range(len(clusters)):
+        key = clusters[j]
+        _l = dict_cluster_listWords[key]
+        print "Sample Words for Cluster %d" % j
+        numWords = len(_l)
+        print _l[0:min(len,25)]
+        
     
     return dict_cluster_listWords
     
 
 if __name__ == "__main__":
-    pos_list = ['V','N']
-    prepareEngDictByPOS() # done: saved to pickle
-    dict_cs_byPOS_LW, dict_eng_byPOS, inputFileName_toCluster = prepareInputBrownCluster(pos_list)
-    runBrownCluster('/Users/ben/Development/CS6742TwitterProject/preprocessedData/combinedBrownCS.txt', K=10)
+    pos_list = ['V','N','A']
+    #prepareEngDictByPOS() # done: saved to pickle
+    #dict_cs_byPOS_LW, dict_eng_byPOS, inputFileName_toCluster = prepareInputBrownCluster(pos_list)
+    #runBrownCluster('/Users/ben/Development/CS6742TwitterProject/preprocessedData/combinedBrownCS.txt', K=25)
     _d = generateParallelDistribution(pos_list)
     

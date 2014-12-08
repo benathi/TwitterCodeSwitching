@@ -81,7 +81,7 @@ def analyzeWordFrequency(pos_list=[], verbose=False):
         # This number can be controlled for significance
         # Possible to use other metric
         if dict_combined[word]['cs'] >= 50: 
-            if dict_combined[word]['ratio-density'] >= 1 or dict_combined[word]['ratio-density'] <= 1:
+            if dict_combined[word]['ratio-density'] >= 4 or dict_combined[word]['ratio-density'] <= 0.25:
                 if d_enchant.check(word):
                     word_list.append(word)
                     x.append(math.log(dict_combined[word]['eng-density']))

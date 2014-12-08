@@ -26,7 +26,7 @@ def loadCSdict():
 def analyzeThaiNgram():
     dict_ngram = loadThaiNgram()
     totalNumOccur = 0
-    totalNumBelow_fifty = 0
+    totalNumGreater_ten = 0
     dict_histogram = {}
     #for i in range(1,100):
     #    dict_histogram[i] = 0
@@ -42,9 +42,9 @@ def analyzeThaiNgram():
             dict_histogram[sum] = 1
             
         totalNumOccur += sum
-        totalNumBelow_fifty += 1 if sum < 50 else 0
+        totalNumGreater_ten += 1 if sum >= 10 else 0
     print 'Total Number of Occurrences = %d' % totalNumOccur
-    print 'The Number of n-gram occuring less than 50 = %d', totalNumBelow_fifty
+    print 'The Number of n-gram occuring >= 10 = %d', totalNumGreater_ten
     print 'The Number of n-grams = %d', len(dict_ngram.keys()) 
     
     x = dict_histogram.keys()
@@ -53,10 +53,13 @@ def analyzeThaiNgram():
     df = pd.DataFrame({'x':x,'y':y})
     p = (ggplot(aes(x='x',y='y'), data=df) +
      #geom_bar(stat='identity', fill='#729EAB') +
-     geom_bar(stat='identity') +
+     #geom_bar(stat='identity') +
+     geom_histogram(stat='bar') +
       labs(title='Distribution of Cluster for Code-Switching Words and English-Tweet Words',
            x='Number of Occurrences of N-Gram in Tweets',
            y='Frequency') )
+    
+    
     print p
     
     '''
@@ -66,7 +69,7 @@ def analyzeThaiNgram():
     return (dict_ngram, dict_histogram)
 
 def obtainNgramDict():
-    ''' Cut off = 50 '''
+    ''' Cut off = 10 '''
     dict_ngram = loadThaiNgram()
     # format
     # key = n-gram. Value = feature id (which column of X matrix)
@@ -80,6 +83,11 @@ def obtainNgramDict():
             dict_ngram_filtered[ngram] = index
             index += 1
     pickle.dump(dict_ngram_filtered,open('../Data/process4/NgramDictAbove10.p','wb'))
+
+def loadSmallNgramDict50():
+    dict_ngram_filtered = pickle.load(open('../Data/process4/NgramDictAbove50.p','rb'))
+    print 'Finished Loading Ngram'
+    return dict_ngram_filtered    
     
 def loadSmallNgramDict():
     dict_ngram_filtered = pickle.load(open('../Data/process4/NgramDictAbove10.p','rb'))
@@ -143,11 +151,16 @@ def testSparseMatrix():
     # consider copy lil_matrix format to another format when done?
     # Convert to CSR (converting is recommended by scipy specificication)
 
+def test_analyzeSmallNgram():
+    dict_ngramSmall = loadSmallNgramDict()
+    print 'The number of keys = %d' % len(dict_ngramSmall.keys())
+
 def main():
     pass
     
 if __name__ == "__main__":
-    #(dict_ngram, dict_histogram) = analyzeThaiNgram()
+    (dict_ngram, dict_histogram) = analyzeThaiNgram()
     #obtainNgramDict()
     #testSparseMatrix()
-    makeSparseFeatureMatrix()
+    #makeSparseFeatureMatrix()
+    
