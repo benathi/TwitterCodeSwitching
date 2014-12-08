@@ -9,7 +9,7 @@ Created on Dec 7, 2014
 import json
 
 def sanityCheck1():
-    fin = '../Data/process1/output1_mini_textList.txt'
+    fin = '../Data/process1/output1_mini_textList_Thai.txt'
     for line in open(fin,'rb'):
         tweet = json.loads(line)
         for text, indic in zip( tweet['text'], tweet['th-indicator']):

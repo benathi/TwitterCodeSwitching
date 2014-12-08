@@ -59,7 +59,7 @@ def convertTextToSegmentedText(listFileNames):
                         print textList
                         segmentedList = []
                     # rewriting new value
-                    textList[i] = ' '.join(segmentedList)
+                    textList[i] = '\t'.join(segmentedList)
 
             fout.write(json.dumps(tweet))
             fout.write('\n')

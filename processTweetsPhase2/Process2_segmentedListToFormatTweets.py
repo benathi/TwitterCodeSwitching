@@ -35,7 +35,7 @@ semicolon, colon,
 
 Alternative: Filter out other character that are not Thai or Alpha Numeric? (Try this)
 '''
-def process2_part1(listFileNames, verbose=False):
+def process2_part1(listFileNames, verbose=True):
     # Format: key = n-gram
     # value = {freq-cs: , freq-non-cs:}
     fout = open('../Data/process2/process2_part1.txt','wb')
@@ -44,20 +44,29 @@ def process2_part1(listFileNames, verbose=False):
     for fname in listFileNames:
         
         f = open(fname, 'rb')
-        for line in f:
+        for _line in f:
             lineNum += 1
             print 'Processing Line %d' % lineNum
+            tweet = json.loads(_line)
+            tweetTextList = tweet['text']
+            #textListIndicator = tweet['th-indicator']
+            tweetText = '\t'.join(tweetTextList)
+            
             #print line.strip()
             # Remove Tokens
-            line_clean = removeNonCSTokens(line)
+            line_clean = removeNonCSTokens(tweetText)
             #print line_clean
             list_tagSep = line_clean.split('\t')
             #print list_tagSep
             list_tagSep2 = []
             for el in list_tagSep:
-                if not len(el) == 0:
-                    list_tagSep2.append(el)
+                if not len(el.strip()) == 0:
+                    list_tagSep2.append(el.strip())
             list_lang = [langid.classify(el) for el in list_tagSep2]
+            for i in range(len(list_tagSep2)):
+                if isEmoji(list_tagSep2[i]):
+                    list_lang[i] = 'emoji'
+                
             # indicators for CS
             '''Filter 1. English Word (including French for word like Cafe with accent)
                          surrounded on the right or left by Thai'''
@@ -95,7 +104,8 @@ def process2_part1(listFileNames, verbose=False):
             cs_index = [i for i in range(len(list_cs_indicator1)) if list_cs_indicator1[i] ]
             _d['text'] = list_tagSep2
             _d['cs-index'] = cs_index
-            #fout.write(unicode(json.dumps(_d,ensure_ascii=False)))
+            # sanity check
+            #print _d
             fout.write(json.dumps(_d))
             fout.write('\n')
             if not verbose:
@@ -103,11 +113,23 @@ def process2_part1(listFileNames, verbose=False):
             if sum(list_cs_indicator1) >= 1:
                 print 'CS!!!!!-------------------------------------------'
                 for el, lang, cs in zip(list_tagSep2, list_lang, list_cs_indicator1):
-                    print 'Text:%s\tLang:%s.Is Potential CS?%s' % (el.decode('utf-8'), lang, cs)
+                    print 'Text:%s\tLang:%s.Is Potential CS?%s' % (el, lang, cs)
             else:
                 print line_clean
             
     print 'Total Number of Tweets with CS %d' % (numCSTweets)
+
+
+def isEmoji(text):
+    # Replacing Emoji 
+    # Surrogates for emoji are in the range [\uD800-\uDBFF][\uDC00-\uDFFF]
+    m1 = re.match(u'[\uD800-\uDBFF][\uDC00-\uDFFF]',text)
+    m2 = re.match(u'[\u2600-\u27BF]',text)
+    m3 = re.match(u'[\uD83C][\uDF00-\uDFFF]',text)
+    m4 = re.match(u'[\uD83D][\uDC00-\uDE4F]',text)
+    m5 = re.match(u'[\uD83D][\uDE80-\uDEFF]',text)
+    
+    return (m1 != None or m2 != None or m3 != None or m4 != None or m5 != None)
 
 
 def process2_part2():
@@ -204,6 +226,9 @@ def removeNonCSTokens(tweetText):
     tweetText = re.sub(r'T[_]*T', r'\t', tweetText)
     tweetText = re.sub(r'[\[\]\(\)\{\}]+', r'\t', tweetText)
     tweetText = re.sub(r'[\^~_]+', r'\t', tweetText)
+    tweetText = re.sub(r'[#!:-]+', r'\t', tweetText)
+    tweetText = re.sub(r'[\.]+', r'\t', tweetText)
+    tweetText = re.sub(r'["\?\/;]+', r'\t', tweetText)
     #tweetText = re.sub(r'[\.^:;_\-\?\"!]+', r'\t', tweetText)
     tweetText = tweetText.strip()
     return tweetText
@@ -244,9 +269,10 @@ def getListInputFiles(dir='../Data/SegmentedTweets'):
 def main():
     ''' Part 1 '''
     #list_inputFiles = getListInputFiles()
-    #process2_part1(list_inputFiles)
+    list_inputFiles = ['../Data/process1/output1_mini_textList_Thai.txt']
+    process2_part1(list_inputFiles)
     ''' Part 2 '''
-    process2_part2()
+    #process2_part2()
     
 def test():
     print tweetPartOfSpeech('Ben goes to the mall.')
