@@ -88,4 +88,4 @@ def main():
     convertTextToSegmentedText(all_listFiles)
     
 if __name__ == "__main__":
-    test()
+    main()
