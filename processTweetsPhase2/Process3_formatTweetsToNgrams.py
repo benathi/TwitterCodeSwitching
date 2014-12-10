@@ -47,12 +47,10 @@ def buildNgramDict(listFileNames):
                     else:
                         dict_cs[word] = 1
             ''' 2. add n-gram to dict_ngram. Choose 1-,2-,3- grams'''
-            text_list = _d['text-list']
+            '''text_list = _d['text-list']
             # Exclude anything English. have to be careful about symbols
             # Regular expression for Thai?
             lang_list = [langid.classify(word)[0] for word in text_list]
-            #####for text,lang in zip(text_list, lang_list):
-            #####    print 'Text:%s \tLang:%s' % (text, lang)
             
             new_text_list = [] # This is a list of list
             index_tList = 0
@@ -65,10 +63,18 @@ def buildNgramDict(listFileNames):
                     new_text_list.append([])
             
             #print new_text_list
-            new_text_list_nonEmpty = [list for list in new_text_list if len(list) > 0]
+            new_text_list_nonEmpty = [list for list in new_text_list if len(list) > 0]'''
+            
+            new_text_list_nonEmpty = []
+            for thaiPhrase,indic in zip(_d['original-text-list'], _d['th-indicator']):
+                if indic:
+                    new_text_list_nonEmpty.append(thaiPhrase.split('\t'))
+            
             #print new_text_list_nonEmpty
             #print new_text_list_nonEmpty
-            listNgrams = getListNgrams(new_text_list_nonEmpty)
+            listNgrams = getListNgrams(new_text_list_nonEmpty,1)
+            listNgrams += getListNgrams(new_text_list_nonEmpty,2)
+            listNgrams += getListNgrams(new_text_list_nonEmpty,3)
             #print listNgrams
             
             isCS = len(_d['cs-word-list']) > 0
@@ -80,7 +86,6 @@ def buildNgramDict(listFileNames):
                     dict_ngram[ngram]['cs'] += 1
                 else:
                     dict_ngram[ngram]['non-cs'] += 1
-            _d['lang-list'] = lang_list
             _d['ngram-list'] = listNgrams
             fout.write(json.dumps(_d))
             fout.write('\n')
@@ -93,6 +98,11 @@ def buildNgramDict(listFileNames):
     pickle.dump(dict_cs, open('../Data/process3/dict_cs.p', 'wb'))
     pickle.dump(dict_ngram, open('../Data/process3/dict_ngram.p', 'wb'))
     '''Next: filter out only keys that are frequent enough '''
+
+'''
+The number of Distinct CS=    3050
+The Number of Distinct N-Gram=    3739286
+'''
 
 def getListNgrams(list_thai_words, n=2):
     

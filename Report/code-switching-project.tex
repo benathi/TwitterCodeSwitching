@@ -1,0 +1,1257 @@
+
+%% bare_conf.tex
+%% V1.3
+%% 2007/01/11
+%% by Michael Shell
+%% See:
+%% http://www.michaelshell.org/
+%% for current contact information.
+%%
+%% This is a skeleton file demonstrating the use of IEEEtran.cls
+%% (requires IEEEtran.cls version 1.7 or later) with an IEEE conference paper.
+%%
+%% Support sites:
+%% http://www.michaelshell.org/tex/ieeetran/
+%% http://www.ctan.org/tex-archive/macros/latex/contrib/IEEEtran/
+%% and
+%% http://www.ieee.org/
+
+%%*************************************************************************
+%% Legal Notice:
+%% This code is offered as-is without any warranty either expressed or
+%% implied; without even the implied warranty of MERCHANTABILITY or
+%% FITNESS FOR A PARTICULAR PURPOSE! 
+%% User assumes all risk.
+%% In no event shall IEEE or any contributor to this code be liable for
+%% any damages or losses, including, but not limited to, incidental,
+%% consequential, or any other damages, resulting from the use or misuse
+%% of any information contained here.
+%%
+%% All comments are the opinions of their respective authors and are not
+%% necessarily endorsed by the IEEE.
+%%
+%% This work is distributed under the LaTeX Project Public License (LPPL)
+%% ( http://www.latex-project.org/ ) version 1.3, and may be freely used,
+%% distributed and modified. A copy of the LPPL, version 1.3, is included
+%% in the base LaTeX documentation of all distributions of LaTeX released
+%% 2003/12/01 or later.
+%% Retain all contribution notices and credits.
+%% ** Modified files should be clearly indicated as such, including  **
+%% ** renaming them and changing author support contact information. **
+%%
+%% File list of work: IEEEtran.cls, IEEEtran_HOWTO.pdf, bare_adv.tex,
+%%                    bare_conf.tex, bare_jrnl.tex, bare_jrnl_compsoc.tex
+%%*************************************************************************
+
+% *** Authors should verify (and, if needed, correct) their LaTeX system  ***
+% *** with the testflow diagnostic prior to trusting their LaTeX platform ***
+% *** with production work. IEEE's font choices can trigger bugs that do  ***
+% *** not appear when using other class files.                            ***
+% The testflow support page is at:
+% http://www.michaelshell.org/tex/testflow/
+
+
+
+% Note that the a4paper option is mainly intended so that authors in
+% countries using A4 can easily print to A4 and see how their papers will
+% look in print - the typesetting of the document will not typically be
+% affected with changes in paper size (but the bottom and side margins will).
+% Use the testflow package mentioned above to verify correct handling of
+% both paper sizes by the user's LaTeX system.
+%
+% Also note that the "draftcls" or "draftclsnofoot", not "draft", option
+% should be used if it is desired that the figures are to be displayed in
+% draft mode.
+%
+\documentclass[conference]{IEEEtran}
+% Add the compsoc option for Computer Society conferences.
+%
+% If IEEEtran.cls has not been installed into the LaTeX system files,
+% manually specify the path to it like:
+% \documentclass[conference]{../sty/IEEEtran}
+
+
+
+\usepackage[english]{babel}
+%\usepackage[english,thai]{babel}
+%\selectlanguage{english}
+\usepackage[utf8x]{inputenc}
+\usepackage{fonts-tlwg}
+
+
+
+
+\usepackage{amsfonts,mathrsfs}
+\usepackage{amsthm, amsmath}
+\usepackage{enumerate}
+\usepackage{color}
+\usepackage{graphicx}
+\usepackage{verbatim}
+\usepackage{placeins}
+\usepackage{caption}
+\usepackage{everysel}
+\usepackage{keyval}
+\usepackage{ragged2e}
+\usepackage{subfig}
+\usepackage{float}
+
+\newcommand{\norm}[1]{|| #1 || } 
+\definecolor{airforceblue}{rgb}{0.36, 0.54, 0.66}
+\definecolor{awesome}{rgb}{1.0, 0.13, 0.32}
+\newcommand{\col}[1]{\textcolor{awesome}{#1}}
+\newcommand{\Tone}{\Theta^{(1)}}
+\newcommand{\Ttwo}{\Theta^{(2)}}
+
+
+\usepackage{tikz}
+
+
+%%% For Unicode
+%\usepackage[utf8]{inputenc}
+%\DeclareUnicodeCharacter{2014}{\dash}
+%\DeclareRobustCommand\dash{%
+%  \unskip\nobreak\thinspace\textemdash\allowbreak\thinspace\ignorespaces}
+%\usepackage{CJKutf8} 
+%\usepackage{ucs} 
+%\usepackage[encapsulated]{CJK} 
+%\newcommand{\myfont}{bsmi} % or {stheiti}, etc 
+
+%\usepackage[utf8]{inputenc}
+%\usepackage[T1]{fontenc}
+
+
+
+
+% Some very useful LaTeX packages include:
+% (uncomment the ones you want to load)
+
+
+% *** MISC UTILITY PACKAGES ***
+%
+%\usepackage{ifpdf}
+% Heiko Oberdiek's ifpdf.sty is very useful if you need conditional
+% compilation based on whether the output is pdf or dvi.
+% usage:
+% \ifpdf
+%   % pdf code
+% \else
+%   % dvi code
+% \fi
+% The latest version of ifpdf.sty can be obtained from:
+% http://www.ctan.org/tex-archive/macros/latex/contrib/oberdiek/
+% Also, note that IEEEtran.cls V1.7 and later provides a builtin
+% \ifCLASSINFOpdf conditional that works the same way.
+% When switching from latex to pdflatex and vice-versa, the compiler may
+% have to be run twice to clear warning/error messages.
+
+
+
+
+
+
+% *** CITATION PACKAGES ***
+%
+%\usepackage{cite}
+% cite.sty was written by Donald Arseneau
+% V1.6 and later of IEEEtran pre-defines the format of the cite.sty package
+% \cite{} output to follow that of IEEE. Loading the cite package will
+% result in citation numbers being automatically sorted and properly
+% "compressed/ranged". e.g., [1], [9], [2], [7], [5], [6] without using
+% cite.sty will become [1], [2], [5]--[7], [9] using cite.sty. cite.sty's
+% \cite will automatically add leading space, if needed. Use cite.sty's
+% noadjust option (cite.sty V3.8 and later) if you want to turn this off.
+% cite.sty is already installed on most LaTeX systems. Be sure and use
+% version 4.0 (2003-05-27) and later if using hyperref.sty. cite.sty does
+% not currently provide for hyperlinked citations.
+% The latest version can be obtained at:
+% http://www.ctan.org/tex-archive/macros/latex/contrib/cite/
+% The documentation is contained in the cite.sty file itself.
+
+
+
+
+
+
+% *** GRAPHICS RELATED PACKAGES ***
+%
+\ifCLASSINFOpdf
+  % \usepackage[pdftex]{graphicx}
+  % declare the path(s) where your graphic files are
+  % \graphicspath{{../pdf/}{../jpeg/}}
+  % and their extensions so you won't have to specify these with
+  % every instance of \includegraphics
+  % \DeclareGraphicsExtensions{.pdf,.jpeg,.png}
+\else
+  % or other class option (dvipsone, dvipdf, if not using dvips). graphicx
+  % will default to the driver specified in the system graphics.cfg if no
+  % driver is specified.
+  % \usepackage[dvips]{graphicx}
+  % declare the path(s) where your graphic files are
+  % \graphicspath{{../eps/}}
+  % and their extensions so you won't have to specify these with
+  % every instance of \includegraphics
+  % \DeclareGraphicsExtensions{.eps}
+\fi
+% graphicx was written by David Carlisle and Sebastian Rahtz. It is
+% required if you want graphics, photos, etc. graphicx.sty is already
+% installed on most LaTeX systems. The latest version and documentation can
+% be obtained at: 
+% http://www.ctan.org/tex-archive/macros/latex/required/graphics/
+% Another good source of documentation is "Using Imported Graphics in
+% LaTeX2e" by Keith Reckdahl which can be found as epslatex.ps or
+% epslatex.pdf at: http://www.ctan.org/tex-archive/info/
+%
+% latex, and pdflatex in dvi mode, support graphics in encapsulated
+% postscript (.eps) format. pdflatex in pdf mode supports graphics
+% in .pdf, .jpeg, .png and .mps (metapost) formats. Users should ensure
+% that all non-photo figures use a vector format (.eps, .pdf, .mps) and
+% not a bitmapped formats (.jpeg, .png). IEEE frowns on bitmapped formats
+% which can result in "jaggedy"/blurry rendering of lines and letters as
+% well as large increases in file sizes.
+%
+% You can find documentation about the pdfTeX application at:
+% http://www.tug.org/applications/pdftex
+
+
+
+
+
+% *** MATH PACKAGES ***
+%
+%\usepackage[cmex10]{amsmath}
+% A popular package from the American Mathematical Society that provides
+% many useful and powerful commands for dealing with mathematics. If using
+% it, be sure to load this package with the cmex10 option to ensure that
+% only type 1 fonts will utilized at all point sizes. Without this option,
+% it is possible that some math symbols, particularly those within
+% footnotes, will be rendered in bitmap form which will result in a
+% document that can not be IEEE Xplore compliant!
+%
+% Also, note that the amsmath package sets \interdisplaylinepenalty to 10000
+% thus preventing page breaks from occurring within multiline equations. Use:
+%\interdisplaylinepenalty=2500
+% after loading amsmath to restore such page breaks as IEEEtran.cls normally
+% does. amsmath.sty is already installed on most LaTeX systems. The latest
+% version and documentation can be obtained at:
+% http://www.ctan.org/tex-archive/macros/latex/required/amslatex/math/
+
+
+
+
+
+% *** SPECIALIZED LIST PACKAGES ***
+%
+%\usepackage{algorithmic}
+% algorithmic.sty was written by Peter Williams and Rogerio Brito.
+% This package provides an algorithmic environment fo describing algorithms.
+% You can use the algorithmic environment in-text or within a figure
+% environment to provide for a floating algorithm. Do NOT use the algorithm
+% floating environment provided by algorithm.sty (by the same authors) or
+% algorithm2e.sty (by Christophe Fiorio) as IEEE does not use dedicated
+% algorithm float types and packages that provide these will not provide
+% correct IEEE style captions. The latest version and documentation of
+% algorithmic.sty can be obtained at:
+% http://www.ctan.org/tex-archive/macros/latex/contrib/algorithms/
+% There is also a support site at:
+% http://algorithms.berlios.de/index.html
+% Also of interest may be the (relatively newer and more customizable)
+% algorithmicx.sty package by Szasz Janos:
+% http://www.ctan.org/tex-archive/macros/latex/contrib/algorithmicx/
+
+
+
+
+% *** ALIGNMENT PACKAGES ***
+%
+%\usepackage{array}
+% Frank Mittelbach's and David Carlisle's array.sty patches and improves
+% the standard LaTeX2e array and tabular environments to provide better
+% appearance and additional user controls. As the default LaTeX2e table
+% generation code is lacking to the point of almost being broken with
+% respect to the quality of the end results, all users are strongly
+% advised to use an enhanced (at the very least that provided by array.sty)
+% set of table tools. array.sty is already installed on most systems. The
+% latest version and documentation can be obtained at:
+% http://www.ctan.org/tex-archive/macros/latex/required/tools/
+
+
+%\usepackage{mdwmath}
+%\usepackage{mdwtab}
+% Also highly recommended is Mark Wooding's extremely powerful MDW tools,
+% especially mdwmath.sty and mdwtab.sty which are used to format equations
+% and tables, respectively. The MDWtools set is already installed on most
+% LaTeX systems. The lastest version and documentation is available at:
+% http://www.ctan.org/tex-archive/macros/latex/contrib/mdwtools/
+
+
+% IEEEtran contains the IEEEeqnarray family of commands that can be used to
+% generate multiline equations as well as matrices, tables, etc., of high
+% quality.
+
+
+%\usepackage{eqparbox}
+% Also of notable interest is Scott Pakin's eqparbox package for creating
+% (automatically sized) equal width boxes - aka "natural width parboxes".
+% Available at:
+% http://www.ctan.org/tex-archive/macros/latex/contrib/eqparbox/
+
+
+
+
+
+% *** SUBFIGURE PACKAGES ***
+%\usepackage[tight,footnotesize]{subfigure}
+% subfigure.sty was written by Steven Douglas Cochran. This package makes it
+% easy to put subfigures in your figures. e.g., "Figure 1a and 1b". For IEEE
+% work, it is a good idea to load it with the tight package option to reduce
+% the amount of white space around the subfigures. subfigure.sty is already
+% installed on most LaTeX systems. The latest version and documentation can
+% be obtained at:
+% http://www.ctan.org/tex-archive/obsolete/macros/latex/contrib/subfigure/
+% subfigure.sty has been superceeded by subfig.sty.
+
+
+
+%\usepackage[caption=false]{caption}
+%\usepackage[font=footnotesize]{subfig}
+% subfig.sty, also written by Steven Douglas Cochran, is the modern
+% replacement for subfigure.sty. However, subfig.sty requires and
+% automatically loads Axel Sommerfeldt's caption.sty which will override
+% IEEEtran.cls handling of captions and this will result in nonIEEE style
+% figure/table captions. To prevent this problem, be sure and preload
+% caption.sty with its "caption=false" package option. This is will preserve
+% IEEEtran.cls handing of captions. Version 1.3 (2005/06/28) and later 
+% (recommended due to many improvements over 1.2) of subfig.sty supports
+% the caption=false option directly:
+%\usepackage[caption=false,font=footnotesize]{subfig}
+%
+% The latest version and documentation can be obtained at:
+% http://www.ctan.org/tex-archive/macros/latex/contrib/subfig/
+% The latest version and documentation of caption.sty can be obtained at:
+% http://www.ctan.org/tex-archive/macros/latex/contrib/caption/
+
+
+
+
+% *** FLOAT PACKAGES ***
+%
+%\usepackage{fixltx2e}
+% fixltx2e, the successor to the earlier fix2col.sty, was written by
+% Frank Mittelbach and David Carlisle. This package corrects a few problems
+% in the LaTeX2e kernel, the most notable of which is that in current
+% LaTeX2e releases, the ordering of single and double column floats is not
+% guaranteed to be preserved. Thus, an unpatched LaTeX2e can allow a
+% single column figure to be placed prior to an earlier double column
+% figure. The latest version and documentation can be found at:
+% http://www.ctan.org/tex-archive/macros/latex/base/
+
+
+
+%\usepackage{stfloats}
+% stfloats.sty was written by Sigitas Tolusis. This package gives LaTeX2e
+% the ability to do double column floats at the bottom of the page as well
+% as the top. (e.g., "\begin{figure*}[!b]" is not normally possible in
+% LaTeX2e). It also provides a command:
+%\fnbelowfloat
+% to enable the placement of footnotes below bottom floats (the standard
+% LaTeX2e kernel puts them above bottom floats). This is an invasive package
+% which rewrites many portions of the LaTeX2e float routines. It may not work
+% with other packages that modify the LaTeX2e float routines. The latest
+% version and documentation can be obtained at:
+% http://www.ctan.org/tex-archive/macros/latex/contrib/sttools/
+% Documentation is contained in the stfloats.sty comments as well as in the
+% presfull.pdf file. Do not use the stfloats baselinefloat ability as IEEE
+% does not allow \baselineskip to stretch. Authors submitting work to the
+% IEEE should note that IEEE rarely uses double column equations and
+% that authors should try to avoid such use. Do not be tempted to use the
+% cuted.sty or midfloat.sty packages (also by Sigitas Tolusis) as IEEE does
+% not format its papers in such ways.
+
+
+
+
+
+% *** PDF, URL AND HYPERLINK PACKAGES ***
+%
+%\usepackage{url}
+% url.sty was written by Donald Arseneau. It provides better support for
+% handling and breaking URLs. url.sty is already installed on most LaTeX
+% systems. The latest version can be obtained at:
+% http://www.ctan.org/tex-archive/macros/latex/contrib/misc/
+% Read the url.sty source comments for usage information. Basically,
+% \url{my_url_here}.
+
+
+
+
+
+% *** Do not adjust lengths that control margins, column widths, etc. ***
+% *** Do not use packages that alter fonts (such as pslatex).         ***
+% There should be no need to do such things with IEEEtran.cls V1.6 and later.
+% (Unless specifically asked to do so by the journal or conference you plan
+% to submit to, of course. )
+
+
+% correct bad hyphenation here
+\hyphenation{op-tical net-works semi-conduc-tor}
+
+
+\begin{document}
+%
+% paper title
+% can use linebreaks \\ within to get better formatting as desired
+\title{Code Switching Phenomenon in Thai Tweets}
+
+
+% author names and affiliations
+% use a multiple column layout for up to three different
+% affiliations
+\author{\IEEEauthorblockN{Ben P. Athiwaratkun}
+\IEEEauthorblockA{Statistical Science Department \\
+Cornell University\\
+pa338@cornell.edu}
+}
+
+% conference papers do not typically use \thanks and this command
+% is locked out in conference mode. If really needed, such as for
+% the acknowledgment of grants, issue a \IEEEoverridecommandlockouts
+% after \documentclass
+
+% for over three affiliations, or if they all won't fit within the width
+% of the page, use this alternative format:
+% 
+%\author{\IEEEauthorblockN{Michael Shell\IEEEauthorrefmark{1},
+%Homer Simpson\IEEEauthorrefmark{2},
+%James Kirk\IEEEauthorrefmark{3}, 
+%Montgomery Scott\IEEEauthorrefmark{3} and
+%Eldon Tyrell\IEEEauthorrefmark{4}}
+%\IEEEauthorblockA{\IEEEauthorrefmark{1}School of Electrical and Computer Engineering\\
+%Georgia Institute of Technology,
+%Atlanta, Georgia 30332--0250\\ Email: see http://www.michaelshell.org/contact.html}
+%\IEEEauthorblockA{\IEEEauthorrefmark{2}Twentieth Century Fox, Springfield, USA\\
+%Email: homer@thesimpsons.com}
+%\IEEEauthorblockA{\IEEEauthorrefmark{3}Starfleet Academy, San Francisco, California 96678-2391\\
+%Telephone: (800) 555--1212, Fax: (888) 555--1212}
+%\IEEEauthorblockA{\IEEEauthorrefmark{4}Tyrell Inc., 123 Replicant Street, Los Angeles, California 90210--4321}}
+
+
+
+
+% use for special paper notices
+%\IEEEspecialpapernotice{(Invited Paper)}
+
+
+
+
+% make the title area
+\maketitle
+
+
+\begin{abstract}
+Code switching is a phenomenon where there is a change in the language in a given phrase or sentence. This paper aims to investigate the Thai-English code-switching phenomenon that occurs in Thai tweets. We analyzed the distribution of code-switching English words compared to the word distribution for normal English usage. We also analyzed the Thai 1,2,3-grams that are correlated with the occurrence of code-switching with a ridge regression model. This model also gives us a predictor of the occurrence of code-switching which performs slightly better than a flat predictor.
+
+\end{abstract}
+% IEEEtran.cls defaults to using nonbold math in the Abstract.
+% This preserves the distinction between vectors and scalars. However,
+% if the conference you are submitting to favors bold math in the abstract,
+% then you can use LaTeX's standard command \boldmath at the very start
+% of the abstract to achieve this. Many IEEE journals/conferences frown on
+% math in the abstract anyway.
+
+% no keywords
+
+
+
+
+% For peer review papers, you can put extra information on the cover
+% page as needed:
+% \ifCLASSOPTIONpeerreview
+% \begin{center} \bfseries EDICS Category: 3-BBND \end{center}
+% \fi
+%
+% For peerreview papers, this IEEEtran command inserts a page break and
+% creates the second title. It will be ignored for other modes.
+\IEEEpeerreviewmaketitle
+
+\begin{comment}
+"Final-project write-up due-date, as determined by the registrar: December 11 at 4:30 pm. I have no particular page length in mind, but please highlight the most interesting findings (positive or negative). You should include the following sections: introduction/motivation, related work, data description (how you gathered, cleaned, and processed it), a methods section, an experiments section, what you learned and what you concluded, what are directions for future work. You don't need to be particularly formal. My primary evaluation criteria will be the reasonableness (in approach and amount of effort), thoughtfulness, and creativity of what you tried."
+\end{comment}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Introduction}
+
+
+
+
+
+
+%\hfill mds
+ 
+%\hfill December 10, 2014
+
+\subsection{Motivation}
+Below are examples of code-switching tweets involving the word {\tt organize}.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[clip=true,trim=0 0 0 0,scale=.40]{Images/CS_Examples/cs_organize3.png}
+	\includegraphics[clip=true,trim=0 0 0 0,scale=0.40]{Images/CS_Examples/cs_organize4.png}
+	\caption{Example of Code-Switching Tweets}
+	\label{fig:ex_csTweets}
+\end{figure}
+
+
+  The reasoning for choosing  the word {\tt organize} instead of an alternative word in the base language is not readily clear. Both of these tweets mainly talk about event organization which does not specifically require the English word. The hypotheses are that the choice to use English reflects the socio-economic status. It can also be the case that the word is easier to say than the Thai counterpart. Or the word might help convey the meaning better. Which hypothesis is true is a particularly difficult question. Instead, this paper will investigate the structures of the code-switching instances.  %  It can be that the word is easier to say than the Thai counterpart and expected audience knows the word quite well. 
+In particular, the questions we will answers are the following:
+
+\begin{itemize}
+\item What English words occur significantly more or less in code-switching instances compared to its normal English usage? Is there any clustering structure we can infer from these words?
+\item What Thai words or phrases are significantly correlated with the occurrences of code-switch? Can we use these words to predict whether the author will code-switch in a Tweet?
+\end{itemize}
+
+
+\subsection{Data Choice}
+Code-switching can be observed in many forms of communication methods, particularly in  informal ones such as posts on  social media platforms and forums. {\tt Twitter} is a particularly suitable platform due to its convenient API. 
+Note that the general methodology presented in this paper can also be extended for bigger dataset that contains not only Thai but other languages. However, for this paper, the dataset is limited to only tweets in Thai as data cleaning process heavily requires knowledge in the base language. %The cultural knowledge also helps with 
+%Thai is a language that the author speaks. The cultural knowledge also helps with determining if a particularly tweet instance should be considered code-switching or not. 
+
+
+\subsection{Related Work}
+\col{To add}
+
+
+
+
+
+
+
+\section{High Level Summary}
+Two major parts of this paper are:
+\begin{enumerate}[(i)]
+\item Analysis of code-switching words
+\begin{itemize}
+\item We look at the part of speech of code-switching English phrases and code-switching English unigrams as opposed to their normal English usage counterparts. 
+\item We filter out and select only English unigrams that are non-proper nouns as true code-switching instances and compare them with normal English distribution, both individually and cluster-based. 
+%\col{filter against Movie database}
+\end{itemize}
+\item Code-switching prediction
+\begin{itemize}
+\item We perform logistic regression with target variable being an indicator $(0,1)$ of whether a code-switching happens in a tweet and the features being the occurrences of n-grams. 
+\end{itemize}
+\end{enumerate}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Methodology}
+This section presents a data preparation process for both (i) and (ii). The steps in shaded boxes are analyses of results which are explained in Section IV.  \smallskip
+
+\begin{figure}[h!]
+\begin{tikzpicture}
+\node[draw] (A) at (0,0) {(A) Filtering Duplicates};
+\node[draw] (B) at (0,-1) {(B) Phrase Segmentation};
+\node[draw] (E) at (0,-2) {(E) Thai Word Breaking};
+\node[draw] (F) at (0,-3) {(F) Obtain Thai 1,2,3-Grams };
+\node[draw,fill=lightgray] (J) at (0,-4) {(IV.C) Logistic Regression };
+\node[draw,fill=lightgray] (G) at (4.5,0) {(IV.A) POS Analysis};
+\node[draw] (C) at (4.5,-1) {(C) Filter Out Punctuations};
+\node[draw] (D) at (4.5,-2) {(D) Filter CS by POS};
+\node[draw,fill=lightgray] (H) at (4.5,-3) {(IV.B) CS Words Analysis};
+%\node[draw,fill=lightgray] (J) at (4.5,-4) {(J) Regression Label };
+
+\draw[->,draw=blue] (A) to (B);
+\draw[->,draw=blue] (B) to (E);
+\draw[->,draw=blue] (E) to (F);
+\draw[->,draw=blue] (F) to (J);
+\draw[->,draw=blue] (A) to (G);
+\draw[->,draw=blue] (B) to[in=180,out=0] (C);
+\draw[->,draw=blue] (C) to (D);
+\draw[->,draw=blue] (D) to (H);
+\draw[->,draw=blue] (D) to[in=0,out=180] (J);
+\draw[->,draw=blue] (G) to[in=0,out=0] (D);
+\draw[->,draw=blue] (G) to (C);
+%\draw[->,draw=blue] (H) to[in=180,out=180] (J);
+
+%\node at (1.0, -1.0) {\textit{a) }};
+
+
+\end{tikzpicture}
+\label{fig:process}
+\caption{Data Pre-Processing}
+\end{figure}
+
+% (A)
+\subsection{Filtering Duplicates}
+
+This phase ensures that there are no duplicate tweets in the data set. The data used are streaming data which contains very little duplicate tweets (same id), however, we find $55$ tweets with duplicate {\tt id\char`_str}  out of $2,583,847$ tweets. 
+
+Note that the analysis of code-switching words without filtering retweets out is equivalent to treating a retweet as a regular tweet, which could be justifiable if the non code-switching tweets are as likely to be retweeted as the code-switching tweets. However, this assumption might not hold. Additionally, to perform regression, we need to filter out retweets in order to eliminate the possibility of prediction of seen data in the test set. We filter out tweets that contain the following regular expression pattern \verb|r'RT @[\w]+:'| This filter is needed in addition to the {\tt "retweeted":true} tag contained in tweet json format as manual inspection confirms that some tweets that are clearly retweets  have this flag set as {\tt "retweeted":false}. The final dataset contains $775,400$ tweets 
+
+% non empty tweets 756485 (not containing Thai or English words)
+
+% 55
+
+% (B)
+\subsection{Phrase Segmentation}
+
+%\subsubsection{}
+%For a given tweet, we need a method to determine if code-switching occurs. First, we consider any English phrases that occur adjacent to Thai words. 
+
+
+%\subsection{Part of Speech Analysis}
+
+
+
+
+
+
+% (c)
+\subsection{Word Breaking (Thai) }
+For a given Thai phrase or sentence, words are  usually written contiguously without any space between them. In addition, spaces sometimes are also omitted between English word and Thai words as shown below.   
+
+%???????????????????????????? ???organize??????????????????
+
+%\begin{otherlanguage*}{thai} ?????? event ????? organize ????? ?????????? ????????????????
+%\end{otherlanguage*}
+
+Note: This Tweet has been abridged and modified for demonstration purpose. 
+
+First, we process tweets by selecting out contiguous Thai characters by regular expression pattern \verb|u'[\u0E00-\u0E7F]+'| which matches Thai characters.
+%[????????????????????????????, ???, organize, ??????????????????]
+
+For each thai phrase, we use the library {\tt libthai0.1.4} by Theppitak Karoonboonyanan et al. and a Python interface {\tt PyThai} to break each Thai  phrase into a list of words. For example, the example tweet becomes 
+% ??? ?? ?? ?? ?? ??? ????
+%[ [??? ??? ?? ???? ??? ???? ???? ??? ??], [???], [organize], [??? ?? ?? ?? ?? ??? ????]]
+
+% (D)
+\subsection{Obtaining N-Grams}
+Figure ~\ref{} shows the histogram of Thai $1,2,3$-grams obtained from sliding window method on the lists of contiguous Thai words. That each, we treat each input, e.g., the following three lists %[??? ??? ?? ???? ??? ???? ???? ??? ??], [???], [??? ?? ?? ?? ?? ??? ????]
+as disjoint. 
+
+Note that we treat any white space, punctuation, and English character as a stopping character for the n-gram sliding window.  For instance the segmented list {\tt [???]} is not included in any $2-$ or $3-$ gram, which should be the case particularly for Thai because the space in the example tweet indicates the end a phrase.
+
+%For instance, the 2-gram for the  example tweet are 
+% [ [??? ???, ??? ??, ?? ????, ???? ???, ??? ????, ????  ????,  ???? ???, ???  ??],
+%[], [organize], [??? ??, ?? ??, ?? ??, ?? ??, ?? ???, ???  ????]    ]
+
+
+
+
+FIGURE of histogram
+
+
+%Next, we consider the occurrence of  n-grams that occurs at least $10$ times as a feature 
+
+%(E)
+\subsection{Design Matrix and Labels}
+\col{mention sparse}
+
+Explain regression
+
+We consider only n-grams that occur at least $10$ times as features and build a sparse matrix of size $NUMTWEET \times NUMDIM$ as a design matrix for regression. 
+
+
+% (F)
+\subsection{Part of Speech Analysis}
+
+
+
+
+
+\subsection{Punctuation Filtering}
+
+
+\subsection{CS Labeling}
+
+
+
+Based on the analysis in section (F), we decide to filter out words with part of speech not in the following list.
+
+TABLE with explanation
+
+
+
+
+
+
+
+
+\subsection{CS Words Analysis}
+
+
+
+\subsection{Regression Label}
+
+%\subsection{Code-Switching Prediction}
+%We try to be as careful as possible in the process of building the design matrix $X$ to be used for regression. 
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\section{Results}
+\subsection{Part of Speech of Code-Switching Words}
+We define pseudo code-switching instances as the occurrences of English phrases that are adjacent to Thai phrases.  These are not all what we consider   true code-switching instances since words such as `Harry Potter' or `Interstellar' almost, if not always, necessitates the use of the English words. 
+
+The hypothesis is that these pseudo code-switching instances will contain a large number of proper nouns. In addition to proper noun category (denoted by \^{}), we also found marked differences in other part of speech's probability, as shown in Figure~\ref{fig:pos_phrases} and ~\ref{fig:pos_uni}. The POS legend and examples are in Table~\ref{tab:pos_legend}
+
+
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[clip=true,trim=0 10 0 00,scale=0.45, width=0.4\textwidth]{Results/hist_cs_phrases.png}
+	\includegraphics[clip=true,trim=0 10 0 00,scale=0.45, width=0.4\textwidth]{Results/NonCS/distribution_POS_engWords_data_nov17.png}
+	\caption{Distribution of Part of Speech for Words in Code Switching Phrases vs Words in English Tweets }
+	\label{fig:pos_phrases}
+\end{figure}
+
+\begin{table}[h!] 
+ \caption{Part of Speech Legend and Examples. See ~\ref{bib:GimpelEtal} for more details.}
+\centering % centering table 
+\begin{tabular}{c c l c c c rrrrrrr} % creating 10 columns 
+\hline\hline % inserting double-line 
+POS Tag		&	Tag Meaning	& 	Examples	
+\\ [0.5ex] 
+\hline 
+\verb|N| 	&	common noun & \verb|mv line BTS mama cap winner|	  	 \\ 
+\verb|O|  	&	pronoun & 	 \verb|me I Me II US i| 	 \\ 
+%\verb|S|  	&	nominal + possessive & 	 0.130297 	 \\ 
+\verb|^| 	&	proper noun & 	 \verb|iPhone ELF Facebook  2NE1| 	 \\
+%\verb|Z|  	&	proper noun + possessive & 	 0.751134 	 	\\
+\verb|L|  	&	nominal + verbal & 	 {\tt ibaekrauhls ID iPhone6Plus}	 \\
+%\verb|M|  	&	proper noun + verbal & 	 0.000389 	 \\
+\verb|V|  	&	Verb & 	 \verb|vs talk VS read VOTE Rewind| 	 \\
+\verb|A|  	&	Adjective & 	 \verb|infinite Favorite Fast|	 \\
+\verb|R|  	&	Adverb & 	 \verb|Y forever here alone always| 	 \\
+\verb|!|  	&	Interjection & 	 \verb|gt http lt amp IG| 	 \\ 
+%\verb|D|  	&	Determiner & 	 (not found) 	 \\ 
+\verb|P|  	&	subordinate conjunction & 	 \verb|via by in Like| 	 \\ 
+\verb|&|  	&	coordinating conjunction & 	\verb|n and  or But|	 \\ 
+\verb|T|  	&	verb particle & 	 \verb|up off down out| 	 \\ 
+%\verb|X|  	&	existential & 	 0.022578 	 \\ 
+\verb|#|  	&	hashtag & 	 \verb|#codeswitching| 	 \\ 
+\verb|@|  	&	at-mention & 	 \verb|@user| 	 \\
+\verb|~|  	&	discourse marker & 	 \verb|RT rt Rt PLSRT -rt| 	 \\ 
+\verb|U|  	&	URL or email address & 	 \verb|google.com/dtJfg04| 	 \\ 
+\verb|E|  	&	emoticon & 	 \verb|x XD T___T T__T -w-| 	 \\ 
+\verb|$|  	&	numeral & 	  \verb|2ndWin One 1stWin 10thirty |  	 \\ 
+\verb|,|  	&	punctuation & 	 \verb|yg_bear YG_iKONph i5 -v-| 	 \\ 
+\verb|G|  	&	other abbreviation & 	 \verb|SM iKON w M PlsRT| 	 \\ 
+% [1ex] adds vertical space 32 
+\hline % inserts single-line 
+\end{tabular} 
+\label{tab:pos_legend} 
+\end{table} 
+
+
+Figure ~\ref{fig:pos_phrases} shows that estimate of the probability for each part of speech (MLE estimate in this case, which is equivalent to the observed ratio with no smoothing) of words that occur in pseudo code-switching English phrases, as well as the part of speech for English words in normal English tweets. 
+% distinct????
+%The pseudo code-switching phrases contain $201,985$  words. The baseline English tweets contain $82,105$ tweets, consisting of $822,559$ words. 
+
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[clip=true,trim=0 10 0 0,scale=0.45, width=0.4\textwidth]{Results/hist_pseudoCS_len.png}
+	\caption{Histogram for number of words in pseudo code-switching phrases. There are $775,345$  pseudo code-switching phrases  contained in  $102,550$ Tweets.}
+	\label{fig:hist_cs_len}
+\end{figure}
+
+
+
+
+
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[clip=true,trim=0 10 0 70,scale=0.45, width=0.4\textwidth]{Results/hist_cs_unigrams.png}
+	\includegraphics[clip=true,trim=0 10 0 70,scale=0.45, width=0.4\textwidth]{Results/NonCS/distribution_POS_BrownClusterWords.png}
+	\caption{Distribution of Part of Speech for Words in Code Switching Unigrams vs Words in English Tweets}
+	\label{fig:pos_uni}
+\end{figure}
+
+From this point on, we will turn our attention to code-switching words that are meaningful English words and are not proper nouns. From the preliminary analysis presented, we decide to keep only the words with the following part of speech:  \verb| [&,A,O,N,P,R,T,V] | Note that ideally, we should be able to keep a larger set part of speech. However, based on the tags performed on a subsets of twitter words shows in Table ~\ref{tab:pos_legend}, we choose to filter out some potentially meaningful part of speech that ideally we should be able to use such as $L$ (nominal + verbal). 
+
+
+In addition, there are some proper nouns that passed through the part of speech filter such as {\tt interstellar, divergent, vine, galaxy}. This group contains proper nouns that might be recently popular and consequently is not incorporated in the POS tagger. We manually go through the code-switching words (this is possible due to its relatively small size of distinct words) to identify proper nouns and filter out words in the following list:
+
+
+\begin{table}[h!] 
+ \caption{List of Proper Nouns for Manual Filter}
+\centering % centering table 
+\begin{tabular}{c c c c c c rrrrrrr} % creating 10 columns 
+\hline\hline % inserting double-line 
+Proper Noun		&	Explanation		
+\\ [0.5ex] 
+\hline 
+'interstellar' 	&	Movie name	\\
+'divergent'		&      Movie name       \\ 
+'insurgent'		&      Movie name        \\
+'kamikaze'		&      Music band        \\ 
+'line'			&      App name       \\
+'marvel'		&      Company name        \\
+'vine'			&      App name        \\ 
+'whiplash'		&      Movie name        \\
+'beam'		&    	Singer name          \\
+'coke'		&      Company/Product name        \\ 
+'muggins'		&      Harry Potter term        \\
+'tot'			&      Company name       \\
+'galaxy'		&	Product name 	\\
+\hline % inserts single-line 
+\end{tabular} 
+\label{tab:properNouns} 
+\end{table} 
+
+
+
+
+%Considering only this collection of part of speech, 
+
+
+
+
+
+
+
+
+\subsection{Code-Switching Unigrams}
+%From this section on, code-switching will strictly means the occurrence of English word that is not a proper noun and that is adjacent to Thai phrases on either sides. 
+%In particular, the filtering process for code-switching words are according to steps (H) described in Section III. 
+
+
+Figure~\ref{fig:cs_words} shows the words and their associated code-switching probabilities and English tweet probabilities. The probabilities here refer to the MLE probability estimates with (no smoothing) with the group of $2,673$ distinct words that occur in both code-switching and English usage. The total number of code-switching words are $13,175$ and the total number of English words are $518,410,750$. 
+
+
+On average, each word occurs roughly $\frac{13,175}{2,673} \approx 5$ times in code-switching. Figure~\ref{fig:cs_words} show the words that occur in code-switching at least $10$ times. % and has their code-switching probability at least $4$ times or at most $0.25$ times relative to their English probability. The region near 
+
+
+%Finally, how many CS words, how many distinct. %fig:cs_words
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[clip=true,trim=60 10 60 0,scale=0.80, width=0.4\textwidth]{Results/cs_words_filterRT.png}
+	\includegraphics[clip=true,trim=60 10 60 0,scale=0.80, width=0.4\textwidth]{Results/cs_words_filterRT_zoom.png}
+	\caption{Distribution of part of speech for words in code switching unigrams versus words in English tweets. The second plot is the original plot but shows only the lower middle region of the original plot. }
+	\label{fig:cs_words}
+\end{figure}
+
+
+
+%In addition, since we will be considering the unigrams as only a true code-switching instance, w
+We consider the distribution of part of speech again but only for  code-switching unigrams after filtering process. We also compare the code-switching word with  the English unigrams filtered with the part of speech set \verb| [&,A,O,N,P,R,T,V] |. The English dataset are words occurred in tweets from $2008$ to $2012$. This is obtained from {\tt Brown Cluster Data}
+Figure ~\ref{fig:pos_uni} shows the result. 
+
+
+\begin{figure}[H]
+	\centering
+	\subfloat[Distribution of POS for Code-Switching Words\label{fig:test1}]
+  {\includegraphics[clip=true,trim=20 10 20 70,width=.45\linewidth]{Results/onlyGoodPOS/cs_unigrams.png}}\hfill
+\subfloat[Distribution of POS for English Words\label{fig:test2}]
+  {\includegraphics[clip=true,trim=20 10 20 70,width=.45\linewidth]{Results/onlyGoodPOS/eng_brown.png}}\hfill
+	\caption{Distribution of Part of Speech for Words in Code Switching Unigrams vs Words in English Tweets}
+	\label{fig:pos_uni_goodPOS}
+\end{figure}
+
+
+Next, we attempt to compare the code-switching words with English words using Brown cluster algorithm. 
+
+
+
+
+
+
+
+\col{show plot}
+
+
+%\subsection{Prediction Results}
+\subsection{Logistic Regression}
+
+We perform a regularized logistic regression with $5$-fold cross-validation to determine the optimal regularization parameter $\lambda$. The penalty term considered are both $\ell_1$ and $\ell_2$ norm of the coefficient vector $\vec{\beta}$. Logistic regression with very high dimensional feature space ( order of magnitude $10^5 - 10^6$) is quite efficient compared to other classifiers. We use the library {\tt scikitlearn} with the design matrix $X$ in  {\tt Python}'s {\tt scipy} sparse matrix format.
+
+
+
+
+Table ~\ref{tab:predictionScores} shows the optimal parameter \col{$\lambda = 1$. } based on the percentage of correctness score.  We also analyzes the prediction power of this logistic regression as shown in Table ~\ref{}. 
+
+\begin{table}[h!] 
+ \caption{Average of prediction scores of 5-fold cross validations for both lasso and ridge regression. The predication score is defined by the percentage of correct prediction.}
+\centering % centering table 
+\begin{tabular}{c c c c c c rrrrrrr} % creating 10 columns 
+\hline\hline % inserting double-line 
+	Regularization & 	$\lambda$		&	Prediction Score	&	Standard Deviation		%&	Precision	& 	Recall	
+\\ [0.5ex] 
+\hline 
+	Lasso 	& 	$e^{-4}$		&	0.972047 	&	$3.6637 \times 10^{-4}$	\\
+	Lasso 	& 	$e^{-3}$		&	0.976628	&
+$3.6681 \times 10^{-4}$		\\	
+	Lasso 	& 	$e^{-2}$		&	0.980829	&
+$3.6053 \times 10^{-4}$           \\	
+	Lasso 	& 	$e^{-1}$		&	0.984475	&
+$1.5892 \times 10^{-4}$           \\	
+	Lasso 	& 	$e^{0}$		&	0.986524	&
+$7.2210 \times 10^{-5}$          \\	
+	\textbf{Lasso} 	& 	$\mathbf{e^{1}}$		&	\textbf{0.986922}	&
+$\mathbf{9.77314 \times 10^{-5}}$          \\	
+	Lasso 	& 	$e^{2}$		&	0.986816	&
+$2.15595 \times 10^{-5}$           \\	
+	Lasso 	& 	$e^{3}$		&	0.986745	&
+$3.14490 \times 10^{-5}$           \\	
+	Lasso 	& 	$e^{4}$		&	0.986494	&
+$7.93141 \times 10^{-6}$           \\	\hline
+	Ridge 	& 	$e^{-4}$		&	0.979649	&
+$3.08827 \times 10^{-4}$           \\	
+	Ridge 	& 	$e^{-3}$		&	0.982186	&
+$2.71405 \times 10^{-4}$         \\	
+	Ridge 	& 	$e^{-2}$		&	0.984274	&
+$1.56487 \times 10^{-4}$           \\	
+	Ridge 	& 	$e^{-1}$		&	0.985726	&
+$1.23270 \times 10^{-4}$           \\	
+	Ridge 	& 	$e^{0}$		&	0.986445	&
+$9.32293 \times 10^{-5}$           \\	
+	Ridge 	& 	$e^{1}$		&	0.986806	&
+$4.93549 \times 10^{-5}$           \\	
+	\textbf{Ridge} 	& 	$\mathbf{e^{2}}$		&	\textbf{0.986917}	& 
+$\mathbf{4.79543 \times 10^{-5}}$           \\	
+	Ridge 	& 	$e^{3}$		&	0.986903	&
+$3.95688 \times 10^{-5}$           \\	
+	Ridge 	& 	$e^{4}$		&	0.986524	&
+$2.18813 \times 10^{-5}$           \\	
+% [1ex] adds vertical space 32 
+\hline \hline % inserts single-line 
+\end{tabular} 
+\label{tab:predictionScores} 
+\end{table} 
+
+\begin{comment}
+Done Loading X,Y
+Done with Regression
+The number of Features is  119450
+Done Loading Regression Result - [All Data]
+The Regression Intercept is [-4.69269572]
+Done Loading X,Y
+Number of features =  119450
+Testing at Level 8.371704e-08
+The number of cs in labels = %d 10211
+baseline predictor accuracy = %f 0.986502045645
+Shape of X
+(756485, 119450)
+Out of 119450 Features, 3311 are significant at 0.000000 level
+The number of positive betas that are significant = 583
+Test----------------------
+\end{comment}
+
+
+
+\begin{comment}
+The Fraction of Correctly Classified Samples = 0.986583
+Performance of Flat Predictor (0 for all) = 0.986133
+Number of Samples = 151297
+Number of Code-Switching Instances = 2098
+Number of Predicting Code-Switching = 126
+Precision = [ 0.98676333  0.76984127]
+Recall = [ 0.99980563  0.04623451]
+\begin{comment}
+
+\begin{comment}
+%lambda = 1
+The Fraction of Correctly Classified Samples = 0.987587
+Performance of Flat Predictor (0 for all) = 0.986133
+Number of Samples = 151297
+Number of Code-Switching Instances = 2098
+Number of Predicting Code-Switching = 310
+Precision = [ 0.98785988  0.85483871]
+Recall = [ 0.99969839  0.12631077]
+Fbeta Score = [ 0.99374388  0.22009967]
+Support [149199   2098]
+\end{comment}
+
+\begin{table}[h!] 
+ \caption{Prediction scores for the baseline estimator (predict all non code-switch) and the classified trained by regularized logistic regression. }
+\centering % centering table 
+\begin{tabular}{c c c c c c rrrrrrr} % creating 10 columns 
+\hline\hline % inserting double-line 
+Estimator 		&		$\lambda$		&	Accuracy		&	Precision	& 	Recall	
+\\ [0.5ex] 
+\hline 
+Baseline Estimator 			&	N/A		&	 0.0	& 	 0.025499 	&		 \\ 
+Trained Lasso Logistic Regression  	&	 	$e^{2}$		&	2.0 	& 	 0.062459 	&		 \\ 
+% [1ex] adds vertical space 32 
+\hline % inserts single-line 
+\end{tabular} 
+\label{tab:predictionScores} 
+\end{table} 
+
+
+
+
+With this optimal $\lambda$ obtained from cross validation, we perform logistic regression on the entire dataset and analyze the significant features. 
+
+
+
+
+
+\subsection{Significant Thai N-Grams}
+Table ~\ref{tab:significantNgram} lists Thai N-grams with positive betas that are significant at level $\alpha = 0.001$.
+
+\begin{table}[h!] 
+ \caption{List of Thai $1,2,3$-Gram with Postive Betas}
+\centering % centering table 
+\begin{tabular}{c c c c c c rrrrrrr} % creating 10 columns 
+\hline\hline % inserting double-line 
+N-Gram		&	Translation	& 	$\beta$	
+\\ [0.5ex] 
+\hline 
+Column-wise Constant $\alpha$  	&	1.0 & 	 0.025499 	 \\ 
+Column-wise Constant $\alpha$  	&	2.0 & 	 0.062459 	 \\ 
+Column-wise Constant $\alpha$  	&	4.0 & 	 0.130297 	 \\ 
+Column-wise Constant $\alpha$  	&	8.0 & 	 0.302554 	 \\
+Column-wise Constant $\alpha$  	&	16.0 & 	 0.751134 	 	\\
+Column-wise Constant $\alpha$  	&	32.0 & 	 2.415786 	 \\
+Element-wise Constant $\alpha$  	&	1.0 & 	 0.000389 	 \\
+Element-wise Constant $\alpha$  	&	2.0 & 	 0.001880 	 \\
+Element-wise Constant $\alpha$  	&	4.0 & 	 0.006716 	 \\
+Element-wise Constant $\alpha$  	&	8.0 & 	 0.003288 	 \\
+Element-wise Constant $\alpha$  	&	16.0 & 	 0.006320 	 \\ 
+Element-wise Constant $\alpha$  	&	32.0 & 	 0.022578 	 \\ 
+% [1ex] adds vertical space 32 
+\hline % inserts single-line 
+\end{tabular} 
+\label{tab:significantNgram} 
+\end{table} 
+
+Next, we demonstrate sample code-switching tweets that contain at least one the significant n-gram with positive beta. 
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\section{Discussion}
+This section discusses the challenges the further improvement that can be made. 
+\subsection{Code-Switching Determination}
+One of  difficult tasks in this research is the determination of whether a code-switch occurs in given tweet. 
+The process employed filters out proper noun  quite well to some extent. However, we find that there are some words that the POS tagger could not have known. An example of this is the following tweet. 
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[clip=true,trim=0 0 0 0,scale=0.45, width=0.4\textwidth]{Images/CS_Examples/line_cs.png}
+	\caption{Example Tweet}
+	\label{fig:GS_compare_column_alpha}
+\end{figure}
+
+The word {\tt Line} in this case refers to a messaging application that is particularly popular in South East Asia. In this paper, we manually goes through the words and select out the set of words that are most likely proper nouns such as {\tt line, interstellar}, to name but a few. However, it could very well be the case that the tweet actually refers to the word {\tt line} in the usual English meaning.  An improvement for the code-switching determination process would be a classifier that translates the whole phrase into English and performs the tagging. 
+
+
+\subsection{Sparsity of Code Switching Data}
+In this exercise, the  code-switching tweets occurs with frequency roughly $2 \% $. This translates to about $13$K code-switching instances with $2.6$K distinct words. This is quite small compared to the number of words in the English baseline of $800$K distinct words. Given more time and resources, this project can be extended to a larger data set. If we gather enough data such that the number of distinct code-switching words is close to $800$K, this will allow for more rigorous analysis on the comparison of code-switching and English word clusters. 
+
+% An example of a floating figure using the graphicx package.
+% Note that \label must occur AFTER (or within) \caption.
+% For figures, \caption should occur after the \includegraphics.
+% Note that IEEEtran v1.7 and later has special internal code that
+% is designed to preserve the operation of \label within \caption
+% even when the captionsoff option is in effect. However, because
+% of issues like this, it may be the safest practice to put all your
+% \label just after \caption rather than within \caption{}.
+%
+% Reminder: the "draftcls" or "draftclsnofoot", not "draft", class
+% option should be used if it is desired that the figures are to be
+% displayed while in draft mode.
+%
+%\begin{figure}[!t]
+%\centering
+%\includegraphics[width=2.5in]{myfigure}
+% where an .eps filename suffix will be assumed under latex, 
+% and a .pdf suffix will be assumed for pdflatex; or what has been declared
+% via \DeclareGraphicsExtensions.
+%\caption{Simulation Results}
+%\label{fig_sim}
+%\end{figure}
+
+% Note that IEEE typically puts floats only at the top, even when this
+% results in a large percentage of a column being occupied by floats.
+
+
+% An example of a double column floating figure using two subfigures.
+% (The subfig.sty package must be loaded for this to work.)
+% The subfigure \label commands are set within each subfloat command, the
+% \label for the overall figure must come after \caption.
+% \hfil must be used as a separator to get equal spacing.
+% The subfigure.sty package works much the same way, except \subfigure is
+% used instead of \subfloat.
+%
+%\begin{figure*}[!t]
+%\centerline{\subfloat[Case I]\includegraphics[width=2.5in]{subfigcase1}%
+%\label{fig_first_case}}
+%\hfil
+%\subfloat[Case II]{\includegraphics[width=2.5in]{subfigcase2}%
+%\label{fig_second_case}}}
+%\caption{Simulation results}
+%\label{fig_sim}
+%\end{figure*}
+%
+% Note that often IEEE papers with subfigures do not employ subfigure
+% captions (using the optional argument to \subfloat), but instead will
+% reference/describe all of them (a), (b), etc., within the main caption.
+
+
+% An example of a floating table. Note that, for IEEE style tables, the 
+% \caption command should come BEFORE the table. Table text will default to
+% \footnotesize as IEEE normally uses this smaller font for tables.
+% The \label must come after \caption as always.
+%
+%\begin{table}[!t]
+%% increase table row spacing, adjust to taste
+%\renewcommand{\arraystretch}{1.3}
+% if using array.sty, it might be a good idea to tweak the value of
+% \extrarowheight as needed to properly center the text within the cells
+%\caption{An Example of a Table}
+%\label{table_example}
+%\centering
+%% Some packages, such as MDW tools, offer better commands for making tables
+%% than the plain LaTeX2e tabular which is used here.
+%\begin{tabular}{|c||c|}
+%\hline
+%One & Two\\
+%\hline
+%Three & Four\\
+%\hline
+%\end{tabular}
+%\end{table}
+
+
+% Note that IEEE does not put floats in the very first column - or typically
+% anywhere on the first page for that matter. Also, in-text middle ("here")
+% positioning is not used. Most IEEE journals/conferences use top floats
+% exclusively. Note that, LaTeX2e, unlike IEEE journals/conferences, places
+% footnotes above bottom floats. This can be corrected via the \fnbelowfloat
+% command of the stfloats package.
+
+
+
+\newpage
+\section{Conclusion}
+The conclusion goes here.
+
+
+
+
+% conference papers do not normally have an appendix
+
+\newpage
+% use section* for acknowledgement
+\section*{Acknowledgment}
+
+
+The authors would like to thank...
+
+
+
+
+
+% trigger a \newpage just before the given reference
+% number - used to balance the columns on the last page
+% adjust value as needed - may need to be readjusted if
+% the document is modified later
+%\IEEEtriggeratref{8}
+% The "triggered" command can be changed if desired:
+%\IEEEtriggercmd{\enlargethispage{-5in}}
+
+% references section
+
+% can use a bibliography generated by BibTeX as a .bbl file
+% BibTeX documentation can be easily obtained at:
+% http://www.ctan.org/tex-archive/biblio/bibtex/contrib/doc/
+% The IEEEtran BibTeX style support page is at:
+% http://www.michaelshell.org/tex/ieeetran/bibtex/
+%\bibliographystyle{IEEEtran}
+% argument is your BibTeX string definitions and bibliography database(s)
+%\bibliography{IEEEabrv,../bib/paper}
+%
+% <OR> manually copy in the resultant .bbl file
+% set second argument of \begin to the number of references
+% (used to reserve space for the reference number labels box)
+\begin{thebibliography}{1}
+
+\bibitem{IEEEhowto:kopka}
+H.~Kopka and P.~W. Daly, \emph{A Guide to \LaTeX}, 3rd~ed.\hskip 1em plus
+  0.5em minus 0.4em\relax Harlow, England: Addison-Wesley, 1999.
+
+
+\bibitem{bib:GimpelEtal}
+K. Gimple, N. Schneider, B. O'Conner et at., \emph{Part-of-Speech Tagger for Twitter: Annotation, Features, and Experiments}
+
+\bibitem{bib:BrownCluster}
+P. Liang. \emph{Semi-Supervised Learning for Natural Language}, Department of Electrical Engineering and Computer Science, MIT, 2005.
+\verb|https://github.com/percyliang/brown-cluster|
+
+\end{thebibliography}
+
+
+
+
+\end{document}
+
+
+%%%%%%%%% FIGURE
+\begin{figure}[H]
+	\centering
+	\includegraphics[clip=true,trim=0 10 0 70,scale=0.45, width=0.4\textwidth]{../../Results/GS/comparison14_LN_decliningRate.png}
+	\caption{Average Best Cost over 5 Trials for Column-Wise Neighborhood for Different Parameter $\alpha_i,\alpha_f$}
+	\label{fig:GS_compare_column_alpha}
+\end{figure}
+
+
+
+%%%%%%%%% Table
+
+\begin{table}[h!] 
+ \caption{Average Delta Cost over $100$ Neighbors for Various Neighborhood Definitions} % title name of the table 
+\centering % centering table 
+\begin{tabular}{c c c c c c rrrrrrr} % creating 10 columns 
+\hline\hline % inserting double-line 
+Neighborhood Option &   $\alpha$ & Average Delta Cost    %& RMSE with User Mean  & Numter of Iterations &  $\gamma$ &\multicolumn{7}{c}{Sum of Extracted Bits} 
+\\ [0.5ex] 
+\hline % inserts single-line 
+ 
+% Entering 1st row 
+ %& &soft &1 & $-1$ & 1 & 1 & $-1$ & $-1$ & 1 \\[-1ex] 
+%\raisebox{1.5ex}{Police} & \raisebox{1.5ex}{5}&hard 
+%& 2 & $-4$ & 4 & 4 & $-2$ & $-4$ & 4 \\[1ex] 
+Column-wise Constant $\alpha$  	&	1.0 & 	 0.025499 	 \\ 
+Column-wise Constant $\alpha$  	&	2.0 & 	 0.062459 	 \\ 
+Column-wise Constant $\alpha$  	&	4.0 & 	 0.130297 	 \\ 
+Column-wise Constant $\alpha$  	&	8.0 & 	 0.302554 	 \\
+Column-wise Constant $\alpha$  	&	16.0 & 	 0.751134 	 	\\
+Column-wise Constant $\alpha$  	&	32.0 & 	 2.415786 	 \\
+Element-wise Constant $\alpha$  	&	1.0 & 	 0.000389 	 \\
+Element-wise Constant $\alpha$  	&	2.0 & 	 0.001880 	 \\
+Element-wise Constant $\alpha$  	&	4.0 & 	 0.006716 	 \\
+Element-wise Constant $\alpha$  	&	8.0 & 	 0.003288 	 \\
+Element-wise Constant $\alpha$  	&	16.0 & 	 0.006320 	 \\
+Element-wise Constant $\alpha$  	&	32.0 & 	 0.022578 	 \\
+% [1ex] adds vertical space 32
+\hline % inserts single-line 
+\end{tabular} 
+\label{tab:SA_aveDeltaCost} 
+\end{table} 
+

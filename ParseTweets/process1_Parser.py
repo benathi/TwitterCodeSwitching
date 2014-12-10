@@ -68,7 +68,9 @@ def tweetToCodeSwitchingPhrases(tweetText, verbose=False, filterThaiCS=True):
     if verbose: print tweetText
     
     
-    list_words = re.findall(r"[a-zA-Z0-9_\-()' ]*", tweetText)
+    #list_words = re.findall(r"[a-zA-Z0-9_\-()' ]*", tweetText)
+    list_words = re.findall(u"[^\u0E00-\u0E7F]*", tweetText)
+    
     #list_words = re.findall(r"[a-zA-Z0-9?><;,{}[\]\-_+=!@#$%\^&*|']*$", tweetText)
     new_list_words = []
     
@@ -122,10 +124,11 @@ def tweetToCodeSwitchingPhrases(tweetText, verbose=False, filterThaiCS=True):
 def extractCodeSwitchingInstances(listFileNames, filterThaiCS=True, tag=''):
     listCodeSwitching = []
     numTweets = 1
+    numDuplicateStr = 0
     for fname in listFileNames:
         if not '.txt' in fname: 
             continue
-        
+        dict_id_str = {}
         print 'Processing File %s' % fname
         tweetsFile = open(fname)
         for line in tweetsFile:
@@ -140,7 +143,22 @@ def extractCodeSwitchingInstances(listFileNames, filterThaiCS=True, tag=''):
                 continue
             _d = {}
             if tweet.has_key('id') and tweet.has_key('text'):
+                if isRT(tweet['text']):
+                    print 'RT'
+                    continue
+                #print 'Non RT'
+                
+                if tweet['id_str'] in dict_id_str:
+                    print 'Found Duplicate ID STR'
+                    numDuplicateStr += 1
+                    continue
+                else:
+                    dict_id_str[tweet['id_str']] = True
+                
                 _listPhrases = tweetToCodeSwitchingPhrases(tweet['text'], filterThaiCS=filterThaiCS)
+                
+                #print tweet['text']
+                #print _listPhrases
                 
                 # Before: save id regardless
                 # After: save id and cs only when there's a CS instance (roughl determination)
@@ -150,13 +168,17 @@ def extractCodeSwitchingInstances(listFileNames, filterThaiCS=True, tag=''):
                 listCodeSwitching.append(_d)
             else:
                 print 'This Tweet has no ID or no Text'
+    print 'Number of Duplicate ID_STR = %d' % numDuplicateStr
     if filterThaiCS:
         pickle.dump(listCodeSwitching, open('../preprocessedData/list_codeSwitchPhrases.p','wb'))
     else:
         pickle.dump(listCodeSwitching, open('../preprocessedData/list_engPhrases_' + tag + '.p', 'wb'))
     return listCodeSwitching
 
-
+def isRT(s):
+    m = re.match(r'RT @[\w]+:', s)
+    #print m
+    return m != None
 
 def sanityCheck():
     inputFileName = '../Data/output1.txt'
@@ -176,10 +198,13 @@ def test():
 def main():
     pass
     #inputFileName = '../Data/output1.txt'
-    extractCodeSwitchingInstances(getListTweetFiles() + getListTweetFiles('../Data/ThaiBatch2'))
+    listFiles = ( getListTweetFiles('../Data/ThaiBatch1') + getListTweetFiles('../Data/ThaiBatch2') +
+            getListTweetFiles('../Data/ThaiBatch3') + getListTweetFiles('../Data/ThaiBatch4') )
+    #listFiles = ['../Data/ThaiBatch1/output1.txt']
+    extractCodeSwitchingInstances(listFiles)
     
     
-    # English
+    # English (get only English)
     #extractCodeSwitchingInstances(['../Data/EngTweets/tweets_eng_nov17.txt'], filterThaiCS=False, tag='eng_nov17')
     
 if __name__ == "__main__":

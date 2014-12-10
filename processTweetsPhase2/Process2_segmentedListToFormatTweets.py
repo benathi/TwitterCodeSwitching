@@ -29,24 +29,23 @@ accepted_pos = ['&','A','O','N','P','R','T','V']
 d_enchant = enchant.Dict('en_US')
 
 
-''' TODO 
-To filter out:
-semicolon, colon, 
-
-Alternative: Filter out other character that are not Thai or Alpha Numeric? (Try this)
 '''
-def process2_part1(listFileNames, verbose=True):
+Process 2 Part 1:
+    Prepare input for POS Tagger
+'''
+def process2_part1(listFileNames, verbose=False):
     # Format: key = n-gram
     # value = {freq-cs: , freq-non-cs:}
     fout = open('../Data/process2/process2_part1.txt','wb')
     lineNum = -1
     numCSTweets = 0
     for fname in listFileNames:
-        
+        print fname
         f = open(fname, 'rb')
         for _line in f:
             lineNum += 1
             print 'Processing Line %d' % lineNum
+            #print _line
             tweet = json.loads(_line)
             tweetTextList = tweet['text']
             #textListIndicator = tweet['th-indicator']
@@ -102,8 +101,11 @@ def process2_part1(listFileNames, verbose=True):
             ## Write Result to file
             _d = {}
             cs_index = [i for i in range(len(list_cs_indicator1)) if list_cs_indicator1[i] ]
+            _d['id_str'] = tweet['id_str']
             _d['text'] = list_tagSep2
             _d['cs-index'] = cs_index
+            _d['original-text-list'] = tweet['text']
+            _d['th-indicator'] = tweet['th-indicator']
             # sanity check
             #print _d
             fout.write(json.dumps(_d))
@@ -128,13 +130,13 @@ def isEmoji(text):
     m3 = re.match(u'[\uD83C][\uDF00-\uDFFF]',text)
     m4 = re.match(u'[\uD83D][\uDC00-\uDE4F]',text)
     m5 = re.match(u'[\uD83D][\uDE80-\uDEFF]',text)
-    
     return (m1 != None or m2 != None or m3 != None or m4 != None or m5 != None)
 
 
+'''
+Run POS Tagger and Load Result
+'''
 def process2_part2():
-    
-    
     # 1. read file and write result to temp.txt for pos tagging
     fin = open('../Data/process2/process2_part1.txt','rb')
     pos_file = '../Data/process2/temp.txt'
@@ -172,6 +174,9 @@ def process2_part2():
             result_all = result[resultLineNum].split('\t')
             list_tags = result_all[1].split(' ')
             if len(list_tags) > len(index_cs):
+                #print index_cs
+                # Inaccurate warning.
+                # As of Dec 7, this is filtering n-gram and keep only unigram English
                 print 'Warning!!!!!!!!!!!! Number of Tokens Mismatch'
                 print result_all
                 continue
@@ -184,11 +189,11 @@ def process2_part2():
                 token = _d['text'][index]
                 # If POS is in the accepted list and it's a dictionary word
                 if pos in accepted_pos:
-                    if d_enchant.check(token.lower()):
+                    if d_enchant.check(token.lower()) and len(token) > 1:
                         print '##############Yay########### CS=%s' % (token)
                         new_cs_indicator.append(index)
                         numSuccessfulCS += 1
-        _newDict = {} # store only thai text, code-switching word, and position of code-switching words
+        #_newDict = {} # store only thai text, code-switching word, and position of code-switching words
         #textThai = _d['text']
         #for i in index_cs:
         #    textThai[i] = '\t'
@@ -197,11 +202,11 @@ def process2_part2():
         #_newDict['cs-word-list'] = [_d['text'][index] for index in new_cs_indicator]
         
         
-        _newDict['text-list'] = _d['text']
-        _newDict['cs-word-list'] = [_d['text'][index] for index in new_cs_indicator]
-        if len(_newDict['cs-word-list']) > 0:
-            print _newDict['text-list']
-            print _newDict['cs-word-list']
+        _d['text-list'] = _d['text']
+        _d['cs-word-list'] = [_d['text'][index] for index in new_cs_indicator]
+        if len(_d['cs-word-list']) > 0:
+            print _d['text-list']
+            print _d['cs-word-list']
         
         #for i in index_cs:
         #    if i not in new_cs_indicator:
@@ -210,7 +215,7 @@ def process2_part2():
         #textThai2 = textThaiString.split('\t')        
         #indexCS_thaiText = [j for j in range(len(textThai2)) if textThai2[i] in _newDict['cs-word']]
         
-        fout.write(json.dumps(_newDict))
+        fout.write(json.dumps(_d))
         fout.write('\n')
     print 'Total Number of CS=%d' % numSuccessfulCS
 
@@ -228,7 +233,7 @@ def removeNonCSTokens(tweetText):
     tweetText = re.sub(r'[\^~_]+', r'\t', tweetText)
     tweetText = re.sub(r'[#!:-]+', r'\t', tweetText)
     tweetText = re.sub(r'[\.]+', r'\t', tweetText)
-    tweetText = re.sub(r'["\?\/;]+', r'\t', tweetText)
+    tweetText = re.sub(r'["\?\/;,\']+', r'\t', tweetText)
     #tweetText = re.sub(r'[\.^:;_\-\?\"!]+', r'\t', tweetText)
     tweetText = tweetText.strip()
     return tweetText
@@ -260,7 +265,7 @@ def runPOSTagger(fname):
 
 
 
-def getListInputFiles(dir='../Data/SegmentedTweets'):
+def getListInputFiles(dir='../Data/process1'):
     _listFiles = os.listdir(dir)
     for i in range(len(_listFiles)):
         _listFiles[i] = os.path.join(dir, _listFiles[i])
@@ -268,11 +273,11 @@ def getListInputFiles(dir='../Data/SegmentedTweets'):
 
 def main():
     ''' Part 1 '''
-    #list_inputFiles = getListInputFiles()
-    list_inputFiles = ['../Data/process1/output1_mini_textList_Thai.txt']
+    list_inputFiles = getListInputFiles()
+    #list_inputFiles = ['../Data/process1/output1_mini_textList_Thai.txt']
     process2_part1(list_inputFiles)
     ''' Part 2 '''
-    #process2_part2()
+    process2_part2()
     
 def test():
     print tweetPartOfSpeech('Ben goes to the mall.')

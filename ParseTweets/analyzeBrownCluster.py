@@ -291,9 +291,9 @@ def generateParallelDistribution(pos_list=['V','A','N']): # TODO : Use this POS 
     
 
 if __name__ == "__main__":
-    pos_list = ['V','N','A']
+    pos_list = ['&','A','O','N','P','R','T','V']
     #prepareEngDictByPOS() # done: saved to pickle
-    #dict_cs_byPOS_LW, dict_eng_byPOS, inputFileName_toCluster = prepareInputBrownCluster(pos_list)
-    #runBrownCluster('/Users/ben/Development/CS6742TwitterProject/preprocessedData/combinedBrownCS.txt', K=25)
+    dict_cs_byPOS_LW, dict_eng_byPOS, inputFileName_toCluster = prepareInputBrownCluster(pos_list)
+    runBrownCluster('/Users/ben/Development/CS6742TwitterProject/preprocessedData/combinedBrownCS.txt', K=25)
     _d = generateParallelDistribution(pos_list)
     

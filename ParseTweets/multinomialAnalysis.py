@@ -19,10 +19,25 @@ Input Format: CS Dictionary and Eng Dictionary are POS Dict
 
 Output: Words that occurs relatively often.
 '''
+dict_word_proper = {'interstellar','divergent',
+                    'insurgent','kamikaze',
+                    'line','marvel','vine',
+                    'whiplash','beam','coke',
+                    'muggins','tot','galaxy'}
+
 
 def analyzeWordFrequency(pos_list=[], verbose=False):
     dict_cs_byPOS_LW = pickle.load(open('../preprocessedData/dict_cs_byTags_LW.p','rb'))
     dict_eng_byPOS = pickle.load( open('../preprocessedData/brownWords_dict_byPOS.p','rb'))
+    
+    '''dict_cs_byPOS_LW_keys = dict_cs_byPOS_LW.keys()
+    for word in dict_cs_byPOS_LW_keys:
+        print word
+        word_lower = word.lower()
+        if word_lower in dict_word_proper:
+            print 'Popping Key ', word
+            dict_cs_byPOS_LW.pop(word, None)'''
+    
     
     # Consider words that occur in both
     dict_combined = {}
@@ -33,6 +48,9 @@ def analyzeWordFrequency(pos_list=[], verbose=False):
         for word in dict_cs_byPOS_LW[pos]:
             if verbose: print '\tWord=', word
             word_lower = word.lower()
+            if word_lower in dict_word_proper:
+                print 'Skipping This Proper Noun'
+                continue
             if word_lower in dict_eng_byPOS[pos]:
                 if verbose: print '\tIn Both'
                 if not word_lower in dict_combined:
@@ -57,7 +75,7 @@ def analyzeWordFrequency(pos_list=[], verbose=False):
     for word in dict_combined:
         # If the count is non-trivial
         if dict_combined[word]['cs'] >= 10:
-            if dict_combined[word]['ratio-density'] >= 5 or dict_combined[word]['ratio-density'] <= 0.2:
+            if dict_combined[word]['ratio-density'] >= 2 or dict_combined[word]['ratio-density'] <= 0.5:
                 #print 'Word:%s\tDensity Ratio:%f' % (word, dict_combined[word]['ratio-density'])
                 list_words_extremeFrequency.append( (word, 
                                                      dict_combined[word]['cs'],
@@ -80,8 +98,8 @@ def analyzeWordFrequency(pos_list=[], verbose=False):
         print 'word=', word
         # This number can be controlled for significance
         # Possible to use other metric
-        if dict_combined[word]['cs'] >= 50: 
-            if dict_combined[word]['ratio-density'] >= 4 or dict_combined[word]['ratio-density'] <= 0.25:
+        if dict_combined[word]['cs'] >= 10: 
+            if dict_combined[word]['ratio-density'] >= 1 or dict_combined[word]['ratio-density'] <= 1:
                 if d_enchant.check(word):
                     word_list.append(word)
                     x.append(math.log(dict_combined[word]['eng-density']))
@@ -98,6 +116,7 @@ def analyzeWordFrequency(pos_list=[], verbose=False):
     p = (ggplot(aes(x='x',y='y'), data=df) +
      #geom_bar(stat='identity', fill='#729EAB') +
      #geom_point() +
+     #geom_point( aes(size=1), color='#333333') +
     geom_text( aes(size=10,label='Word'), color='#88aa55') + 
     geom_line(aes(x='ControlLine',y='ControlLine', color='#552255'), size=3, alpha=0.5) + 
     labs(title='Density of English Words and Code-Switching Words')  + 

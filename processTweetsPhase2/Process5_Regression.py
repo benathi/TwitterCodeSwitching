@@ -26,9 +26,22 @@ def loadSparseInputMatrix():
     print 'Done Loading X,Y'
     return (X,Y)
 
+
+def CV_determineOptimalLambda():
+    X,Y = loadSparseInputMatrix()
+    for penalty in ['l1','l2']:
+        for regParam in [np.exp(i) for i in [-4,-3,-2,-1,0,1,2,3,4]]:
+            print 'Penalty', penalty
+            print 'Regularization Parameter = %e' % regParam
+            logreg = linear_model.LogisticRegression(penalty=penalty,C=(1.0/(1.0*regParam)))
+            scores = cross_validation.cross_val_score(logreg, X, Y, cv=5)
+            print np.mean(scores)
+            print np.std(scores)
+        print '----------------------'
+
 def performRegression():
     X,Y = loadSparseInputMatrix()
-    logreg = linear_model.LogisticRegression(penalty='l2') # can change to l1
+    logreg = linear_model.LogisticRegression(penalty='l1',C=(1.0/(np.exp(2.0)))) # can change to l1
     reg_result = logreg.fit(X,Y)
     print 'Done with Regression'
     coef = reg_result.coef_[0]
@@ -49,14 +62,18 @@ def analyzeRegressionSignificance():
     print 'The Regression Intercept is' , reg_result.intercept_
     X,Y = loadSparseInputMatrix()
     
+    numFeatures = np.shape(X)[1]
+    print 'Number of features = ', numFeatures
+    
     coefs = reg_result.coef_[0]
     results = sklearn.feature_selection.univariate_selection.f_regression(X, Y, center=False)
     F_values, p_values =  results
-    level = 0.001
+    level = 0.01/numFeatures
     numSignificant = 0
     numTotal = 0
     numSignificant_pos = 0
     
+    print 'Testing at Level %e' % level
     #for p_val in p_values:
     for i in range(len(coefs)):
         coef_val = coefs[i]
@@ -68,15 +85,20 @@ def analyzeRegressionSignificance():
             if coef_val > 0:
                 numSignificant_pos += 1
     
+    
+    print 'The number of cs in labels = %d', sum(Y)
+    print 'baseline predictor accuracy = %f', (1-sum(Y)/(1.0*len(Y)))
+    
+    
     print 'Shape of X'
     print np.shape(X)
-    print 'Out of %d Features, %d are significant at %f level' % (numTotal, numSignificant, level)
+    print 'Out of %d Features, %d are significant at %e level' % (numTotal, numSignificant, level)
     print 'The number of positive betas that are significant = %d' % numSignificant_pos
 
 
 def performRegressionSliced(numFold=5):
     X,Y = loadSparseInputMatrix()
-    logreg = linear_model.LogisticRegression(penalty='l2') # can change to l1
+    logreg = linear_model.LogisticRegression(penalty='l1',C=(1.0/(np.exp(0.0)))) # can change to l1
     m = len(Y)
     m_regress = m - int(m/numFold)
     newX = X[:m_regress]
@@ -98,6 +120,7 @@ def analyzeRegressionPredicintingStatistics(numFold=5):
     predict_Y = reg_result.predict(Xtest)
     ac_scores = sklearn.metrics.accuracy_score(Ytest, predict_Y)
     print 'The Fraction of Correctly Classified Samples = %f' % ac_scores
+    print 'Performance of Flat Predictor (0 for all) = %f' % (1.0 - (sum(Ytest)/(1.0*len(Ytest))))
     ## got 0.991494 - no way -- this is too high!
     
     print 'Number of Samples = %d' % len(Ytest)
@@ -115,10 +138,12 @@ def analyzeRegressionPredicintingStatistics(numFold=5):
     print 'Support', _support
 
 
+
 #################################################################################
 #################################################################################
 #################################################################################
 #################################################################################
+### OLD CODE ###
 def testCrossValidation():
     X,Y = loadSparseInputMatrix()
     ## Cross Validation
@@ -130,8 +155,6 @@ def testCrossValidation():
         [ 0.98871353  0.98851697]
     '''
     ## Might be high because it's almost always 0
-    
-
 def testRegression():
     X = sparse.lil_matrix((4,10), dtype=np.bool)
     Y = sparse.lil_matrix((4,1), dtype=np.bool)
@@ -157,11 +180,13 @@ def testRegression():
     
 
 def main():
+    #CV_determineOptimalLambda()
     pass
     #performRegression()
     #analyzeRegressionSignificance()
     ''' CV '''
-    #performRegressionSliced()
+    print 'Test----------------------'
+    performRegressionSliced()
     analyzeRegressionPredicintingStatistics()
     
 if __name__ == "__main__":

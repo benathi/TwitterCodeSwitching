@@ -12,8 +12,10 @@ from ggplot import *
 #import sklearn.linear_model.LogisticRegression
 from scipy import sparse
 import random
-NUM_LINES = 1892532
+#NUM_LINES = 1892532
+NUM_LINES = 756485
 import json
+import math
 
 def loadThaiNgram():
     dict_ngram = pickle.load(open('../Data/process3/dict_ngram.p','rb'))
@@ -47,26 +49,36 @@ def analyzeThaiNgram():
     print 'The Number of n-gram occuring >= 10 = %d', totalNumGreater_ten
     print 'The Number of n-grams = %d', len(dict_ngram.keys()) 
     
-    x = dict_histogram.keys()
-    y = [dict_histogram[i] for i in x]
+    pickle.dump(dict_histogram,file('../Data/process4/histogramNgram.p','wb'))
+    return (dict_ngram, dict_histogram)
+
+def analyzeThaiNgram2():
+    dict_histogram = pickle.load(file('../Data/process4/histogramNgram.p','rb'))
+    #x = dict_histogram.keys()
+    xy = [(key, dict_histogram[key]) for key in dict_histogram if key <= 100]
+    x = [el[0] for el in xy]
+    y = [ math.log(el[1]) for el in xy]
     
     df = pd.DataFrame({'x':x,'y':y})
     p = (ggplot(aes(x='x',y='y'), data=df) +
      #geom_bar(stat='identity', fill='#729EAB') +
      #geom_bar(stat='identity') +
-     geom_histogram(stat='bar') +
+     #geom_histogram(stat='bar') + # not using bar
+     #geom_histogram(binwidth=10) + 
+     geom_line() + 
       labs(title='Distribution of Cluster for Code-Switching Words and English-Tweet Words',
            x='Number of Occurrences of N-Gram in Tweets',
-           y='Frequency') )
+           y='Log(Frequency)') )
     
-    
+    for key in dict_histogram:
+        print '(%s, %d)' % (key, dict_histogram[key])
     print p
     
     '''
     Note: number of n-grams = 
     '''
     #################
-    return (dict_ngram, dict_histogram)
+    
 
 def obtainNgramDict():
     ''' Cut off = 10 '''
@@ -79,7 +91,7 @@ def obtainNgramDict():
         cs = dict_ngram[ngram]['cs']
         non_cs = dict_ngram[ngram]['non-cs']
         sum = cs + non_cs
-        if sum >= 10:
+        if sum >= 10: ### MODIFY 
             dict_ngram_filtered[ngram] = index
             index += 1
     pickle.dump(dict_ngram_filtered,open('../Data/process4/NgramDictAbove10.p','wb'))
@@ -94,11 +106,28 @@ def loadSmallNgramDict():
     print 'Finished Loading Ngram'
     return dict_ngram_filtered
 
+dict_word_proper = {'interstellar','divergent',
+                    'insurgent','kamikaze',
+                    'line','marvel','vine',
+                    'whiplash','beam','coke',
+                    'muggins','tot','galaxy'}
+
+def isCSinTweet(cs_word_list):
+    if len(cs_word_list) == 0:
+        return False
+    else:
+        for word in cs_word_list:
+            if not word in dict_word_proper:
+                return True
+        # If all words are in the proper word dictionary, return False (Not CS)
+        return False
+
 def makeSparseFeatureMatrix():
     ''' This method read tweets generate a sparse matrix (to be used for regression)'''
     # also needs y vector (1 for code-switch, 0 for non code-switch)
     dict_ngram = loadSmallNgramDict()
     numFeatures = len(dict_ngram.keys())
+    print 'Warning: The number of lines is static. (= %d)' % NUM_LINES
     X = sparse.lil_matrix((NUM_LINES,numFeatures), dtype=np.bool)
     Y = sparse.lil_matrix((NUM_LINES,1), dtype=np.bool)
     
@@ -109,7 +138,8 @@ def makeSparseFeatureMatrix():
         tweet = json.loads(line)
         ngram_list = tweet['ngram-list']
         # record y
-        Y[numRow,0] = (len(tweet['cs-word-list']) > 0)
+        csInTweet = isCSinTweet(tweet['cs-word-list'])
+        Y[numRow,0] = csInTweet
         # record X
         for ngram in ngram_list:
             if ngram in dict_ngram:
@@ -159,8 +189,9 @@ def main():
     pass
     
 if __name__ == "__main__":
-    (dict_ngram, dict_histogram) = analyzeThaiNgram()
-    #obtainNgramDict()
+    #(dict_ngram, dict_histogram) = analyzeThaiNgram()    # (takes a long time. result cached to pickle)
+    #analyzeThaiNgram2()
+    obtainNgramDict()
     #testSparseMatrix()
-    #makeSparseFeatureMatrix()
+    makeSparseFeatureMatrix()
     

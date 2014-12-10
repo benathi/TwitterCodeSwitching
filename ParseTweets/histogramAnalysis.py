@@ -18,11 +18,15 @@ from subprocess import Popen, call, PIPE
 from nltk.tag.stanford import NERTagger
 import os
 import sys
+import re
 #POS_KEYS = ['!', '$', '&', ',', 'A', 'E', 'D', 'G', 'L', 'O', 'N', 'P', 'S', 'R', 'U', 'T', 'V', 'Y', 'X', 'Z', '^', '~']
-POS_KEYS = ['!', '#', '$', '&', ',', 'A', 'E', 'D', 'G', 'L', 'O', 'N', 'P', 'S', 'R', 'U', 'T', 'V', 'Y', 'X', 'Z', '^', '~']
+#POS_KEYS = ['!', '#', '$', '&', ',', 'A', 'E', 'D', 'G', 'L', 'O', 'N', 'P', 'S', 'R', 'U', 'T', 'V', 'Y', 'X', 'Z', '^', '~']
 # @, M
+# exhaustive
 #POS_KEYS = ['!', '#', '$', '&', ',', 'A', '@', 'E', 'D', 'G', 'M', 'L', 'O', 'N', 'P', 'S', 'R', 'U', 'T', 'V', 'Y', 'X', 'Z', '^', '~']
 
+
+POS_KEYS = ['&','A','O','N','P','R','T','V']
 
 def loadCodeSwitchPhrases():
     return pickle.load(open('../preprocessedData/list_codeSwitchPhrases.p','rb'))
@@ -41,7 +45,7 @@ def csList(option='All'):
     ###############
     if option=='All':
         for el in cs_dict:
-            #numTweets += 1
+            numTweets += 1
             if 'cs' in el:
                 numCSTweets += 1
                 newList_cs.append(el['cs'])
@@ -61,7 +65,7 @@ def histogram_CSLength():
     numTweets, numCSTweets, listCS = csList()
     # make a histogram
     print 'Number of Total Tweets=\t%d' % numTweets
-    print 'Number of Code-Switching Tweets=\t%d' % numCSTweets 
+    print 'Number of Pseudo Code-Switching Tweets=\t%d' % numCSTweets 
     list_lengthCS = []
     for el in listCS:
         for el2  in el:
@@ -71,7 +75,11 @@ def histogram_CSLength():
     #plot_url = py.plot(data, filename='../Results/histogram_Length_CS')
 
     df = pd.DataFrame(list_lengthCS, columns=['length_cs'])
-    p = ggplot(aes(x='length_cs'), data=df)+ geom_histogram(binwidth=1,fill='#FF9999')
+    p = (ggplot(aes(x='length_cs'), data=df)+ geom_histogram(binwidth=1,fill='#FF9999') 
+        + labs(title='Histogram for Length of Pseudo Code-Switching Instances',
+               x='Length of Pseudo Code-Switching Instance', 
+               y ='Frequency')
+        )
     print p
     return p
 
@@ -82,6 +90,7 @@ def listMostFrequent():
     _,_, listCS = csList()
     for list_phrase in listCS:
         for phrase in list_phrase:
+            phrase = re.sub(r'\s', ' ', phrase)
             if phrase  in _dp:
                 _dp[phrase] += 1
             else:
@@ -124,9 +133,13 @@ def listMostFrequent():
     # one line for one tweet text
     #listPhrases = pickle.load(open('../preprocessedData/list_cs_phrases.p','rb'))
     f = open('../preprocessedData/list_cs_phrasesNoFreq.txt','wb')
+    numLines_input = 0
     for phrasePair in listPhrases:
-        f.write(phrasePair[0] + '\n')
+        numLines_input += 1
+        f.write(phrasePair[0].encode('utf-8'))
+        f.write('\n')
     f.close()
+    print 'The number of lines for input = ', numLines_input 
     return (listWords, listPhrases)
 
 
@@ -146,7 +159,10 @@ def tagTweets(fname='list_cs_phrasesNoFreq.txt'):
     print 'Return Code is %d' % rc
     ### 
     listPhrases = pickle.load(open('../preprocessedData/list_cs_phrases.p', 'rb'))
+    len_listPhrases = len(listPhrases)
     lineNum = 0
+    
+    
     for line in output.splitlines():
         result = line.split('\t')
         #tokens, tags = (result[0], result[1])
@@ -158,8 +174,13 @@ def tagTweets(fname='list_cs_phrasesNoFreq.txt'):
         print 'Tag List'
         print list_tags
         
-        listPhrases[lineNum] = (listPhrases[lineNum][0], listPhrases[lineNum][1], list_tokens, list_tags)
+        print '(%d, %d)' % (lineNum , len_listPhrases)
         
+        if lineNum < len_listPhrases:
+            listPhrases[lineNum] = (listPhrases[lineNum][0], listPhrases[lineNum][1], list_tokens, list_tags)
+            print 'listPhrases'
+            print listPhrases[lineNum]
+        #return
         if not len(list_tags) == len(list_tokens):
             print 'Error! List of Tags and List of Tokens are Not of the Same Length'
             return -1
@@ -345,7 +366,7 @@ def AnalyzeCSPhrases():
                 dict_cs_byTags_LW[pos][token] = dict_cs_byPhrase[key]['freq']
             else:
                 dict_cs_byTags_LW[pos][token] += dict_cs_byPhrase[key]['freq']
-    
+     
     fname = '../preprocessedData/Batch1And2_listCSbyPOS_LoneWords.tsv'
     #if not os.path.isfile(fname):
     f = open(fname,'wb')
@@ -466,8 +487,8 @@ if __name__ == "__main__":
     #(listWords, listPhrases) = listMostFrequent()
     # 1. Tag Tweets with CMU Tweet Tool
     #tagTweets()
-    #histogramPOS()
-    #histogramPOS_LoneCS()
+    histogramPOS()
+    histogramPOS_LoneCS()
     
     # 2. Use Stanford NER for Tagging too - (bug in NLTK possibly)
     #NER_Tweets()
@@ -476,5 +497,5 @@ if __name__ == "__main__":
     # 3. Sanity Check
     #ob = AnalyzeCSPhrases()
     
-    #produceEnglishPOSHistogram()
-    #produce50mpaths2POSHistogram()
+    produceEnglishPOSHistogram()
+    produce50mpaths2POSHistogram()
