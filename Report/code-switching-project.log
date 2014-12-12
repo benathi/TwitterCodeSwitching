@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.14159265-2.6-0.99991 (TeX Live 2014) (preloaded format=xelatex 2014.5.25)  10 DEC 2014 12:35
+This is XeTeX, Version 3.14159265-2.6-0.99991 (TeX Live 2014) (preloaded format=xelatex 2014.5.25)  11 DEC 2014 11:21
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -618,11 +618,7 @@ File: pgfmodulematrix.code.tex 2013/09/17  (rcs-revision 1.8)
 (/usr/local/texlive/2014/texmf-dist/tex/generic/pgf/frontendlayer/tikz/librarie
 s/tikzlibrarytopaths.code.tex
 File: tikzlibrarytopaths.code.tex 2008/06/17 v3.0.0 (rcs-revision 1.2)
-))) (./code-switching-project.aux
-
-LaTeX Warning: Label `tab:predictionScores' multiply defined.
-
-)
+))) (./code-switching-project.aux)
 \openout1 = `code-switching-project.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 399.
@@ -641,10 +637,10 @@ Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: subfig package v1.3 is loaded.
 Package caption Info: float package is loaded.
 Package caption Info: End \AtBeginDocument code.
- ABD: EverySelectfont initializing macros
-LaTeX Info: Redefining \selectfont on input line 399.
 
-ABD: EveryShipout initializing macros
+ABD: EverySelectfont initializing macros
+LaTeX Info: Redefining \selectfont on input line 399.
+ ABD: EveryShipout initializing macros
 LaTeX Font Info:    Try loading font information for OT1+pcr on input line 496.
 
 
@@ -657,125 +653,101 @@ File: Images/CS_Examples/cs_organize3.png Graphic file (type QTm)
 File: Images/CS_Examples/cs_organize4.png Graphic file (type QTm)
 
 <use  "Images/CS_Examples/cs_organize4.png" >
-LaTeX Font Info:    Try loading font information for U+msa on input line 511.
+LaTeX Font Info:    Try loading font information for U+msa on input line 508.
 
 (/usr/local/texlive/2014/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 511.
+LaTeX Font Info:    Try loading font information for U+msb on input line 508.
 
 (/usr/local/texlive/2014/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-LaTeX Font Info:    Try loading font information for U+rsfs on input line 511.
+LaTeX Font Info:    Try loading font information for U+rsfs on input line 508.
 
 (/usr/local/texlive/2014/texmf-dist/tex/latex/jknapltx/ursfs.fd
 File: ursfs.fd 1998/03/24 rsfs font definition file (jk)
 )
 
-Package xcolor Warning: Incompatible color definition on input line 523.
-
-
-Overfull \hbox (9.77063pt too wide) in paragraph at lines 582--584
-[][]
- []
+LaTeX Warning: `!h' float specifier changed to `!ht'.
 
 [1
 
 
 ]
-Underfull \hbox (badness 1742) in paragraph at lines 623--625
-[]\OT1/ptm/m/n/10 First, we pro-cess tweets by se-lect-ing out con-tigu-ous
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 623--625
-\OT1/ptm/m/n/10 Thai char-ac-ters by reg-u-lar ex-pres-sion pat-tern
- []
-
-
-LaTeX Warning: Reference `' on page 2 undefined on input line 632.
-
-
-Package xcolor Warning: Incompatible color definition on input line 651.
-
-[2]
 File: Results/hist_cs_phrases.png Graphic file (type QTm)
  <use  "Results/hist_cs_phrases.png" >
 File: Results/NonCS/distribution_POS_engWords_data_nov17.png Graphic file (type
  QTm)
 
 <use  "Results/NonCS/distribution_POS_engWords_data_nov17.png" >
-
-LaTeX Warning: Reference `bib:GimpelEtal' on page 3 undefined on input line 720
-.
-
-
-LaTeX Warning: Reference `bib:GimpelEtal' on page 3 undefined on input line 720
-.
-
-
-Overfull \hbox (23.88739pt too wide) in paragraph at lines 722--755
+Overfull \hbox (23.88739pt too wide) in paragraph at lines 641--674
  [][] 
  []
 
-
-LaTeX Warning: `!h' float specifier changed to `!ht'.
-
+[2]
 File: Results/hist_pseudoCS_len.png Graphic file (type QTm)
-<use  "Results/hist_pseudoCS_len.png" >
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
+ <use  "Results/hist_pseudoCS_len.png" >
 File: Results/hist_cs_unigrams.png Graphic file (type QTm)
 
 <use  "Results/hist_cs_unigrams.png" >
 File: Results/NonCS/distribution_POS_BrownClusterWords.png Graphic file (type Q
 Tm)
 
-<use  "Results/NonCS/distribution_POS_BrownClusterWords.png" >
-Underfull \vbox (badness 10000) has occurred while \output is active []
+<use  "Results/NonCS/distribution_POS_BrownClusterWords.png" > [3]
+File: Results/ngram_hist_fine.png Graphic file (type QTm)
 
- [3]
-
-LaTeX Warning: `!h' float specifier changed to `!ht'.
-
+<use  "Results/ngram_hist_fine.png" >
 File: Results/cs_words_filterRT.png Graphic file (type QTm)
-<use  "Results/cs_words_filterRT.png" >
+ <use  "Results/cs_words_filterRT.png" >
 File: Results/cs_words_filterRT_zoom.png Graphic file (type QTm)
 
 <use  "Results/cs_words_filterRT_zoom.png" >
-Underfull \hbox (badness 2626) in paragraph at lines 853--855
-\OT1/ptm/m/n/10 En-glish un-i-grams fil-tered with the part of speech set
- []
-
 File: Results/onlyGoodPOS/cs_unigrams.png Graphic file (type QTm)
+
 <use  "Results/onlyGoodPOS/cs_unigrams.png" >
 File: Results/onlyGoodPOS/eng_brown.png Graphic file (type QTm)
 
-<use  "Results/onlyGoodPOS/eng_brown.png" > [4]
-
-Package xcolor Warning: Incompatible color definition on input line 876.
-
-
-Package xcolor Warning: Incompatible color definition on input line 887.
-
-
-LaTeX Warning: Reference `' on page 5 undefined on input line 887.
+<use  "Results/onlyGoodPOS/eng_brown.png" >
+Underfull \hbox (badness 3189) in paragraph at lines 896--897
+ \OT1/ptm/m/it/10 2) Brown Clus-ter-ing: [][] \OT1/ptm/m/n/10 Next, we at-tempt
+ to com-pare
+ []
 
 
-Overfull \hbox (16.06241pt too wide) in paragraph at lines 984--995
+Underfull \hbox (badness 8113) in paragraph at lines 896--897
+\OT1/ptm/m/n/10 the code-switching words with En-glish words us-ing
+ []
+
+
+Underfull \hbox (badness 2261) in paragraph at lines 896--897
+\OT1/ptm/m/n/10 Brown clus-ter al-go-rithm. The li-brary is ob-tained from
+ []
+
+
+Overfull \hbox (6.0pt too wide) in paragraph at lines 896--897
+[]\OT1/pcr/m/n/10 https://github.com/percyliang/brown-cluster 
+ []
+
+File: Results/brown_cluster10.png Graphic file (type QTm)
+<use  "Results/brown_cluster10.png" >
+Underfull \vbox (badness 1789) has occurred while \output is active []
+
+ [4]
+File: Results/brown_cluster100.png Graphic file (type QTm)
+
+<use  "Results/brown_cluster100.png" >
+Overfull \hbox (5.99779pt too wide) in paragraph at lines 938--939
  [][] 
  []
 
 
-LaTeX Warning: `!h' float specifier changed to `!ht'.
+Underfull \vbox (badness 10000) has occurred while \output is active []
 
-
-LaTeX Warning: `!h' float specifier changed to `!ht'.
-
-[5]
+ [5]
 File: Images/CS_Examples/line_cs.png Graphic file (type QTm)
- <use  "Images/CS_Examples/line_cs.png" > [6]
+
+<use  "Images/CS_Examples/line_cs.png" >
 
 ** Conference Paper **
 Before submitting the final camera ready copy, remember to:
@@ -787,23 +759,14 @@ Before submitting the final camera ready copy, remember to:
  uses only Type 1 fonts and that every step in the generation
  process uses the appropriate paper size.
 
-[7
-
-] (./code-switching-project.aux)
-
-LaTeX Warning: There were undefined references.
-
-
-LaTeX Warning: There were multiply-defined labels.
-
- ) 
+[6] (./code-switching-project.aux) ) 
 Here is how much of TeX's memory you used:
- 13875 strings out of 493734
- 274721 string characters out of 6146348
+ 13873 strings out of 493734
+ 274749 string characters out of 6146348
  318144 words of memory out of 5000000
- 16910 multiletter control sequences out of 15000+600000
- 33507 words of font info for 88 fonts, out of 8000000 for 9000
+ 16905 multiletter control sequences out of 15000+600000
+ 32959 words of font info for 87 fonts, out of 8000000 for 9000
  1331 hyphenation exceptions out of 8191
- 55i,12n,54p,848b,654s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 55i,12n,54p,1101b,654s stack positions out of 5000i,500n,10000p,200000b,80000s
 
-Output written on code-switching-project.pdf (7 pages).
+Output written on code-switching-project.pdf (6 pages).

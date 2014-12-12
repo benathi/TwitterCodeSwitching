@@ -100,6 +100,7 @@ def analyzeWordFrequency(pos_list=[], verbose=False):
         # Possible to use other metric
         if dict_combined[word]['cs'] >= 10: 
             if dict_combined[word]['ratio-density'] >= 1 or dict_combined[word]['ratio-density'] <= 1:
+                #if True:
                 if d_enchant.check(word):
                     word_list.append(word)
                     x.append(math.log(dict_combined[word]['eng-density']))
@@ -109,16 +110,21 @@ def analyzeWordFrequency(pos_list=[], verbose=False):
     FACTOR=1000
     nn = len(x)*FACTOR
     controlLine = [math.log(i/(1.0*nn)) for i in xrange(1,nn+1,FACTOR)]
+    controlLineUp = [math.log(4.0*i/(1.0*nn)) for i in xrange(1,nn+1,FACTOR)]
+    controlLineDown = [math.log(0.25*i/(1.0*nn)) for i in xrange(1,nn+1,FACTOR)]
     print controlLine
     df2 = pd.DataFrame({'ControlLine':controlLine})
     df = pd.DataFrame({'x':x,'y':y, 'Word':word_list,
-                       'Size':log_ratioDensity, 'ControlLine':controlLine})
+                       'Size':log_ratioDensity, 'ControlLine':controlLine,
+                       'ControlLineUp':controlLineUp,'ControlLineDown':controlLineDown})
     p = (ggplot(aes(x='x',y='y'), data=df) +
      #geom_bar(stat='identity', fill='#729EAB') +
      #geom_point() +
      #geom_point( aes(size=1), color='#333333') +
-    geom_text( aes(size=10,label='Word'), color='#88aa55') + 
-    geom_line(aes(x='ControlLine',y='ControlLine', color='#552255'), size=3, alpha=0.5) + 
+    geom_text( aes(size=10,label='Word'), color='#bf166b') + 
+    geom_line(aes(x='ControlLine',y='ControlLine', color='#4D5D53'), size=3, alpha=0.5) +
+    geom_line(aes(x='ControlLine',y='ControlLineUp', color='#78866b', linetype='dashed'), size=1, alpha=0.5) + 
+    geom_line(aes(x='ControlLine',y='ControlLineDown', color='#78866b', linetype='dashed'), size=1, alpha=0.5) + 
     labs(title='Density of English Words and Code-Switching Words')  + 
       xlab("Log Probability of English Word") +
       ylab("Log Probability of Code-Switching Word")

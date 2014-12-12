@@ -93,12 +93,12 @@ def prepareInputBrownCluster_Both(pos_list):
             # Add to the common list only if 
             # the word in cs is in the Eng Dict
             # note:revert
-            word_lower = word ##### NOTE: This is a quick fix (see it we should change the dict permanently)
+            word_lower = word.lower() ##### NOTE: This is a quick fix (see it we should change the dict permanently)
             if word_lower in dict_eng_byPOS[pos]:
                 numWordsInBoth_distinct += 1
                 numWordsInBoth +=  dict_cs_byPOS_LW[pos][word]
                 numWordsInBoth +=  dict_eng_byPOS[pos][word_lower]
-                list_words.append(word)
+                list_words.append(word_lower)
             else:
                 list_words_notInEng.append(word_lower)
     print 'The Number of Distinct CS Words Considered = %d' % numWordsCS_Considered_distinct
@@ -166,7 +166,7 @@ def visualizeHtml():
     #   /Users/ben/Development/CS6742TwitterProject/ParseTweets/combinedBrownCS-c10-p1.out/paths    
 
 def loadClusterResults():
-    folder = 'combinedBrownCS-c25-p1.out'    #### CHANGE
+    folder = 'combinedBrownCS-c100-p1.out'    #### CHANGE
     filename = os.path.join(folder, 'paths')
     # format:   key=word, value=cluster
     dict_cluster = {}
@@ -274,8 +274,8 @@ def generateParallelDistribution(pos_list=['V','A','N']): # TODO : Use this POS 
     df = pd.DataFrame({'Cluster':ag_clusters_num,'Density':aggregate_list, 'Legend':Legend})
     p = (ggplot(aes(x='Cluster',y='Density',fill='Legend'), data=df) +
      #geom_bar(stat='identity', fill='#729EAB') +
-     geom_bar(stat='identity', position='Legend') +
-      labs(title='Distribution of Cluster for Code-Switching Words and English-Tweet Words') )
+     geom_bar(stat='identity', position='dodged') +
+      labs(title='Density of Cluster for Code-Switching Words and English-Tweet Words') )
     print p
     
     
@@ -293,7 +293,7 @@ def generateParallelDistribution(pos_list=['V','A','N']): # TODO : Use this POS 
 if __name__ == "__main__":
     pos_list = ['&','A','O','N','P','R','T','V']
     #prepareEngDictByPOS() # done: saved to pickle
-    dict_cs_byPOS_LW, dict_eng_byPOS, inputFileName_toCluster = prepareInputBrownCluster(pos_list)
-    runBrownCluster('/Users/ben/Development/CS6742TwitterProject/preprocessedData/combinedBrownCS.txt', K=25)
+    #dict_cs_byPOS_LW, dict_eng_byPOS, inputFileName_toCluster = prepareInputBrownCluster(pos_list)
+    runBrownCluster('/Users/ben/Development/CS6742TwitterProject/preprocessedData/combinedBrownCS.txt', K=100)
     _d = generateParallelDistribution(pos_list)
     

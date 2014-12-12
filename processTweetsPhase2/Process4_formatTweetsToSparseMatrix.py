@@ -55,7 +55,7 @@ def analyzeThaiNgram():
 def analyzeThaiNgram2():
     dict_histogram = pickle.load(file('../Data/process4/histogramNgram.p','rb'))
     #x = dict_histogram.keys()
-    xy = [(key, dict_histogram[key]) for key in dict_histogram if key <= 100]
+    xy = [(key, dict_histogram[key]) for key in dict_histogram if key <= 1000]
     x = [el[0] for el in xy]
     y = [ math.log(el[1]) for el in xy]
     
@@ -66,13 +66,17 @@ def analyzeThaiNgram2():
      #geom_histogram(stat='bar') + # not using bar
      #geom_histogram(binwidth=10) + 
      geom_line() + 
-      labs(title='Distribution of Cluster for Code-Switching Words and English-Tweet Words',
+      labs(title='Log Histogram of Thai 1-,2-,3-Grams',
            x='Number of Occurrences of N-Gram in Tweets',
            y='Log(Frequency)') )
     
     for key in dict_histogram:
         print '(%s, %d)' % (key, dict_histogram[key])
     print p
+    
+    #print 'The number of distinct n-grams = ', len(dict_histogram.keys())
+    #print 'The number of n-grams', np.sum(np.array([dict_histogram[k] for k in dict_histogram.keys()]))
+    #print 'The number of n-grams more than 10', np.sum(np.array([dict_histogram[k] if k >= 10 else 0  for k in dict_histogram.keys()]))
     
     '''
     Note: number of n-grams = 
@@ -189,9 +193,9 @@ def main():
     pass
     
 if __name__ == "__main__":
-    #(dict_ngram, dict_histogram) = analyzeThaiNgram()    # (takes a long time. result cached to pickle)
+    (dict_ngram, dict_histogram) = analyzeThaiNgram()    # (takes a long time. result cached to pickle)
     #analyzeThaiNgram2()
-    obtainNgramDict()
+    #obtainNgramDict()
     #testSparseMatrix()
-    makeSparseFeatureMatrix()
+    #makeSparseFeatureMatrix()
     

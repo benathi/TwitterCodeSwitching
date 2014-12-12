@@ -41,7 +41,7 @@ def CV_determineOptimalLambda():
 
 def performRegression():
     X,Y = loadSparseInputMatrix()
-    logreg = linear_model.LogisticRegression(penalty='l1',C=(1.0/(np.exp(2.0)))) # can change to l1
+    logreg = linear_model.LogisticRegression(penalty='l1',C=(1.0/(np.exp(1.0)))) # can change to l1
     reg_result = logreg.fit(X,Y)
     print 'Done with Regression'
     coef = reg_result.coef_[0]
@@ -68,7 +68,8 @@ def analyzeRegressionSignificance():
     coefs = reg_result.coef_[0]
     results = sklearn.feature_selection.univariate_selection.f_regression(X, Y, center=False)
     F_values, p_values =  results
-    level = 0.01/numFeatures
+    #level = 0.01/numFeatures
+    level = 0.001
     numSignificant = 0
     numTotal = 0
     numSignificant_pos = 0
@@ -98,7 +99,7 @@ def analyzeRegressionSignificance():
 
 def performRegressionSliced(numFold=5):
     X,Y = loadSparseInputMatrix()
-    logreg = linear_model.LogisticRegression(penalty='l1',C=(1.0/(np.exp(0.0)))) # can change to l1
+    logreg = linear_model.LogisticRegression(penalty='l1',C=(1.0/(np.exp(-1.0)))) # can change to l1
     m = len(Y)
     m_regress = m - int(m/numFold)
     newX = X[:m_regress]
