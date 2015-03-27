@@ -1,18 +1,8 @@
 Ben Athiwaratkun (c) 2014
 
-This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
- 
 __________________________________________________
 This repository is the code base for code-switching NLP project. 
-The goal is to identify significant n-grams (Thai) that contribute 
+The goal is to identify significant n-grams  that contribute 
 to the occurrence of code-switching. The ML algorithm used is lasso 
 regression. This also gives a predictor of whether there will be a 
 code-switching instance given the features(n-grams). 
@@ -32,20 +22,14 @@ Install: brew install enchant
 Install: pip install pyenchant
 3. Python NLTK
 Install: pip install nltk
-4. 
 
-5. Language Identification : Recommended by Code Switching Community
+4. Language Identification : Recommended by Code Switching Community
 https://github.com/saffsd/langid.py
 Install: pip install --pre langid
 
-6. CMU ARK Twitter Part-of-Speech Tagger
+5. CMU ARK Twitter Part-of-Speech Tagger
 
-7. 
-
-
-+ more (I will try to list all the exhaustive list soon)
-
-Install libthai (C library from sourceforge)
-	- compatible with ubuntu 13.01 as far as I know (not OS X or Ubuntu 14.04)
-Install pythai
+6. Install libthai (C library from sourceforge)
+	- compatible with ubuntu 13.01
+7. Install pythai
 	pip install pythai
